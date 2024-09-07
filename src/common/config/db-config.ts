@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
+import { Shift } from 'src/shifts/entities/shift.entity';
 
 @Injectable()
 export class DatabaseConfigService implements TypeOrmOptionsFactory {
@@ -14,7 +16,8 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DB_USERNAME'),
       password: this.configService.get<string>('DB_PASSWORD'),
       database: this.configService.get<string>('DB_NAME'),
-      autoLoadEntities: true,
+      // autoLoadEntities: true,
+      entities: [Collaborator, Shift],
       synchronize: true, // Solo para desarrollo, no usar en producción
     };
   }
