@@ -1,5 +1,5 @@
 import { Patient } from "src/patients/entities/patient.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('tutors')
 export class Tutor {
@@ -13,5 +13,31 @@ export class Tutor {
     userId: number;
 
     @OneToMany(() => Patient, (patient) => patient.tutor)
-    patients: Patient[]
+    patients: Patient[];
+
+    // @CreateDateColumn({
+    //     name: 'created_at',
+    //     type: 'timestamptz',
+    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     select: false,
+    // })
+    // createdAt: Date;
+
+    // @UpdateDateColumn({
+    //     name: 'updated_at',
+    //     type: 'timestamptz',
+    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     onUpdate: `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     select: false,
+    // })
+    // updatedAt: Date;
+
+    // @DeleteDateColumn({
+    //     name: 'deleted_at',
+    //     type: 'timestamptz',
+    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     select: false,
+    // })
+    // deletedAt: Date;
+
 }

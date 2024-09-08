@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsDate, IsDateString, IsDecimal, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDate, IsDateString, isDecimal, IsDecimal, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Gender } from "src/common/enums/gender.enum";
 import { Species } from "src/common/enums/species.enum";
 
@@ -16,6 +16,7 @@ export class CreatePatientDto {
     specie: Species;
 
     @ApiPropertyOptional({ description: 'The breed of the patient if applies', example: 'Criollo', type: String })
+    @IsOptional()
     @IsString()
     breed: string;
 
@@ -24,15 +25,18 @@ export class CreatePatientDto {
     gender: Gender;
 
     @ApiPropertyOptional({ description: 'The aproximated date of birth of the patient', example: '2012-09-28', type: Date })
+    @IsOptional()
     @Transform(({ value }) => value ? new Date(value) : null)
     @IsDate()
     dob: Date;
 
-    @ApiPropertyOptional({ description: 'Weight of the patient en KG', example: 3.6, type: Number })
+    @ApiPropertyOptional({ description: 'Weight of the patient en KG', example: 3.6, type: Number, format: 'float' })
+    @IsOptional()
     @IsNumber()
     weight: number;
 
     @ApiPropertyOptional({ description: 'Description of the alimentation of the patient', example: 'Royal Canin con alimento húmedo casero', type: String })
+    @IsOptional()
     @IsString()
     alimentation: string;
 

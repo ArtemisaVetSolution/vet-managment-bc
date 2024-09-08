@@ -1,7 +1,7 @@
 import { Gender } from "src/common/enums/gender.enum";
 import { Species } from "src/common/enums/species.enum";
 import { Tutor } from "src/tutors/entities/tutor.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('patients')
 export class Patient {
@@ -32,13 +32,41 @@ export class Patient {
     })
     dob: Date;
 
-    @Column()
+    @Column({
+        type: 'float'
+    })
     weight: number;
 
     @Column()
     alimentation: string;
 
-    @ManyToOne(() => Tutor, (tutor) => tutor.patients )
+    @ManyToOne(() => Tutor, (tutor) => tutor.patients)
     @JoinColumn({ name: 'tutor_id' })
-    tutor: Tutor
+    tutor: Tutor;
+
+    // @CreateDateColumn({
+    //     name: 'created_at',
+    //     type: 'timestamptz',
+    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     select: false,
+    // })
+    // createdAt: Date;
+
+    // @UpdateDateColumn({
+    //     name: 'updated_at',
+    //     type: 'timestamptz',
+    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     onUpdate: `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     select: false,
+    // })
+    // updatedAt: Date;
+
+    // @DeleteDateColumn({
+    //     name: 'deleted_at',
+    //     type: 'timestamptz',
+    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+    //     select: false,
+    // })
+    // deletedAt: Date;
+
 }

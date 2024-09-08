@@ -6,30 +6,44 @@ import { Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
+import { PatientQueryDto } from './dto/patient-query.dto';
 
 @Injectable()
 export class PatientsService {
   constructor(
-    @InjectRepository(Patient) private patientsRepository: Repository <Patient>,
-    @InjectRepository(Tutor) private tutorsRepository: Repository <Tutor>
-  ) {}
+    @InjectRepository(Patient) private patientsRepository: Repository<Patient>,
+    @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>
+  ) { }
 
   @CatchErrors()
   async create(createPatientDto: CreatePatientDto) {
 
-    const tutor: Tutor = await this.tutorsRepository.findOne({ where: { id: createPatientDto.tutorId }});
+    const tutor: Tutor = await this.tutorsRepository.findOne({ where: { id: createPatientDto.tutorId } });
 
     if (!tutor) throw new NotFoundException('Tutor was not found');
 
-    const newPatient: Patient = this.patientsRepository.create({...createPatientDto, tutor});
+    const newPatient: Patient = this.patientsRepository.create({ ...createPatientDto, tutor });
 
     return await this.patientsRepository.save(newPatient);
 
   }
 
   @CatchErrors()
-  async findAll() {
-    const patients : Patient[] = await this.patientsRepository.find();
+  async findWithQueryParams(patientQuery: PatientQueryDto) {
+
+    const query = this.patientsRepository.createQueryBuilder('patient')
+
+    if (patientQuery.tutorId) {
+      const tutor = await this.tutorsRepository.findOne({ where: { id: patientQuery.tutorId } });
+      if (!tutor) throw new NotFoundException('Tutor was not found');
+      query.andWhere(`patient.tutor = :tutor`, { tutor: tutor.id });
+    }
+
+    if (patientQuery.specie) {
+      query.andWhere('patient.specie = :specie', { specie: patientQuery.specie });
+    }
+
+    const patients: Patient[] = await query.getMany();
 
     if (!patients.length) throw new NotFoundException('No patients were found');
 
@@ -38,37 +52,30 @@ export class PatientsService {
 
   @CatchErrors()
   async findOne(id: number) {
-    const patient: Patient = await this.patientsRepository.findOne({ where: { id }});
+    const patient: Patient = await this.patientsRepository.findOne({ where: { id } });
 
-    if(!patient) throw new NotFoundException('Patient was not found');
+    if (!patient) throw new NotFoundException('Patient was not found');
 
     return patient;
   }
 
   @CatchErrors()
-  async findByTutorId( id: number ) {
+  async update(id: number, updatePatientDto: UpdatePatientDto) {
+    const result = await this.patientsRepository.update(id, updatePatientDto);
 
-    const tutor: Tutor = await this.tutorsRepository.findOne({ where: {id}});
+    if (result.affected === 0) {
+      throw new NotFoundException('Patient not found');
+    }
 
-    if(!tutor) throw new NotFoundException('Tutor not found');
-
-    const patients: Patient[] = await this.patientsRepository.findBy({ tutor })
-
-    if(!patients) throw new NotFoundException('No patients were found for that tutor');
-
-    return patients;
+    return await this.patientsRepository.findOne({ where: { id } });
   }
 
   @CatchErrors()
-  async findBySpecie( specie: string ) {
-    
-  }
+  async remove(id: number) {
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
-  }
+    const patient: Patient = await this.findOne(id);
+    await this.patientsRepository.softDelete(id);
 
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
+    return patient;
   }
 }
