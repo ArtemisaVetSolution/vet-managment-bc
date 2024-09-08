@@ -11,7 +11,7 @@ export class ResponseInterceptor<T> implements NestInterceptor <T, IResponse<T>>
 
         return{
           statusCode: response.statusCode,
-          message: body ? "Request was successfully": "There is not a body",
+          message: body ? "Request was successful": "There is not a body",
           data:  body !== undefined ? body : null
         }
       })
