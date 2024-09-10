@@ -6,27 +6,44 @@ import { Collaborator } from './entities/collaborator.entity';
 import { Repository } from 'typeorm';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { ServicesService } from 'src/services/services.service';
+import { ShiftsService } from 'src/shifts/shifts.service';
 
 @Injectable()
 export class CollaboratorsService {
 
   constructor(
     private readonly serviceService: ServicesService,
+    private readonly shiftService: ShiftsService,
     @InjectRepository(Collaborator) private collaboratorRepository: Repository<Collaborator>
   ) {} 
 
   @CatchErrors()
-  create(createCollaboratorDto: CreateCollaboratorDto) {
+  async create(createCollaboratorDto: CreateCollaboratorDto) {
     let servicesExists = true;
-    createCollaboratorDto.servicesId.forEach(service => {
-      let id = null;
-      id = await this.serviceService.findOne(service);
-      if (!id) {
+    for (const serviceId of createCollaboratorDto.servicesId) {
+      const service = await this.serviceService.findOne(serviceId);
+      if (!service) {
         servicesExists = false;
+        break; 
       }
-    });
-    if (!servicesExists) throw new NotFoundException('Services not founds')
-    return this.collaboratorRepository.save(createCollaboratorDto);
+    }
+
+    if (!servicesExists) {
+      throw new NotFoundException('One or more services not found');
+    }
+    const shift = await this.shiftService.findOne(createCollaboratorDto.shiftId);
+
+    if (!shift) {
+      throw new NotFoundException('Shift not found');
+    }
+
+    const newCollaborator = this.collaboratorRepository.create({
+      shift : shift
+    });  
+    
+
+
+    return this.collaboratorRepository.save(newCollaborator);
   }
 
   findAll() {

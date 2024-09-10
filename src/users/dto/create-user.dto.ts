@@ -19,16 +19,13 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   @MaxLength(50)
-  @Matches(/(?:(?=.\d)|(?=.\W+))(?![.\n])(?=.[A-Z])(?=.[a-z]).*$/, {
-    message:
-      'The password must have a Uppercase, lowercase letter and a number',
+  @Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/, {
+    message: 'The password must contain at least one uppercase letter, one lowercase letter, and one number',
   })
   password: string;
 
   @IsString()
-  @IsPhoneNumber(null, {
-    message: 'The cellphone number must be a valid phone number',
-  })
+  @IsPhoneNumber(null)
   cellphone: string;
 
   @IsString()
