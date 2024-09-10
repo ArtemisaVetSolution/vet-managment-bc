@@ -24,16 +24,16 @@ import {
     @IsString()
     @MinLength(6)
     @MaxLength(50)
-    @Matches(/(?:(?=.\d)|(?=.\W+))(?![.\n])(?=.[A-Z])(?=.[a-z]).*$/, {
+    @Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/, {
       message:
-        'The password must have a Uppercase, lowercase letter and a number',
+        'password The password must have a Uppercase, lowercase letter and a number',
     })
     password: string;
   
     @ApiProperty({ description: 'Cellphone of the user', example: '3003965473'})
     @IsString()
     @IsPhoneNumber(null, {
-      message: 'The cellphone number must be a valid phone number',
+      message: 'cellphone The cellphone number must be a valid phone number',
     })
     cellphone: string;
   
