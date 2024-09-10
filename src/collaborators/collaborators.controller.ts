@@ -22,11 +22,25 @@ export class CollaboratorsController {
     return this.collaboratorsService.findOne(+id);
   }
 
+  @Get('shift/:shiftName')
+  findByShift(@Param('shiftName') shiftName: string) {
+    return this.collaboratorsService.findAllByShift(shiftName)
+  }
+
+  @Get('service/:serviceId')
+  findByService(@Param('serviceId') serviceId: string) {
+    return this.collaboratorsService.findAllByService(+serviceId)
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCollaboratorDto: UpdateCollaboratorDto) {
     return this.collaboratorsService.update(+id, updateCollaboratorDto);
   }
 
+  @Patch(':id/restore')
+  restore(@Param('id') id: string) {
+    return this.collaboratorsService.restoreCollaborator(+id);
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.collaboratorsService.remove(+id);

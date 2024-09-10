@@ -14,11 +14,6 @@ export class Collaborator {
   @Column( { name: 'user_id' })
   userId: number;
 
-  @Column({
-    default: true,
-  })
-  active: boolean;
-
   @ManyToMany(() => Service)
   @JoinTable({name: 'collaborators_services'})
   services: Service[];

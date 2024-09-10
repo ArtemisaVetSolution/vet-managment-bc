@@ -21,8 +21,16 @@ export class ShiftsService {
     return `This action returns all shifts`;
   }
 
+  async findOneByName(name: string) {
+    const shift = await this.shiftRepository.findOne({where: {name}});
+    if (!shift) {
+      throw new NotFoundException(`Shift #${name} not found`);
+    }
+    return shift;
+  }
+
   async findOne(id: number) {
-    const shift = await this.shiftRepository.findOne({where: {id}});
+    const shift = await this.shiftRepository.findOne({where:{id}});
     if (!shift) {
       throw new NotFoundException(`Shift #${id} not found`);
     }

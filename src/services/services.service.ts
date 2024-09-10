@@ -1,25 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Service } from './entities/service.entity';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ServicesService {
-  create(createServiceDto: CreateServiceDto) {
-    return 'This action adds a new service';
+  constructor(
+    @InjectRepository(Service) private readonly serviceRepository: Repository<Service>
+  ) {}
+
+  @CatchErrors()
+  async create(createServiceDto: CreateServiceDto) {
+    const newService = this.serviceRepository.create(createServiceDto);
+    return this.serviceRepository.save(newService);
   }
 
+  @CatchErrors()
   findAll() {
-    return `This action returns all services`;
+    const services = this.serviceRepository.find();
+    if (!services) {
+      throw new NotFoundException('No services found');
+    }
+    return services;
   }
 
+  @CatchErrors()
   async findOne(id: number) {
-    return `This action returns a #${id} service`;
+    const service = await this.serviceRepository.findOne({where:{id}});
+    if (!service) {
+      throw new NotFoundException(`Service #${id} not found`);
+    }
+    return service;
   }
 
+  @CatchErrors()
   update(id: number, updateServiceDto: UpdateServiceDto) {
     return `This action updates a #${id} service`;
   }
 
+  @CatchErrors()
   remove(id: number) {
     return `This action removes a #${id} service`;
   }
