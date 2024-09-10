@@ -1,9 +1,8 @@
 import { AppointmentState } from "src/common/enums/appointment-state.enum";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Service } from "./service.entity";
 import { Patient } from "src/patients/entities/patient.entity";
-import { Collaborator } from "./collaborator.entity";
-
+import { Service } from "src/services/entities/service.entity";
+import { Collaborator } from "src/collaborators/entities/collaborator.entity";
 @Entity('appointments')
 export class Appointment {
     @PrimaryGeneratedColumn('increment')

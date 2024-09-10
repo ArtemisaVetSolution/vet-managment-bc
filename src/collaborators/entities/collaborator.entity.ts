@@ -1,6 +1,7 @@
 import { Shift } from 'src/shifts/entities/shift.entity';
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, ManyToMany, JoinTable, CreateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, ManyToMany, JoinTable, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
 import { Service } from 'src/services/entities/service.entity';
+import { Appointment } from 'src/appointments/entities/appointment.entity';
 
 @Entity('collaborators')
 export class Collaborator {
@@ -17,6 +18,9 @@ export class Collaborator {
   @ManyToMany(() => Service)
   @JoinTable({name: 'collaborators_services'})
   services: Service[];
+
+  @OneToMany(() => Appointment, appointment => appointment.collaborator)
+  appointments: Appointment[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', select: false })
   createdAt: Date;

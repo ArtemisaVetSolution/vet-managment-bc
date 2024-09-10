@@ -1,5 +1,6 @@
+import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('services')
 export class Service {
@@ -14,5 +15,8 @@ export class Service {
 
   @ManyToMany(() => Collaborator)
   collaborators: Collaborator[];
+
+  @OneToMany(() => Appointment, appointment => appointment.service)
+  appointments: Appointment[];
 
 }

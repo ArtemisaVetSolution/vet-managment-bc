@@ -36,7 +36,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
     CollaboratorsModule,
     ShiftsModule,
     ServicesModule,
-    TypeOrmModule.forFeature([Shift, Service])
+    TypeOrmModule.forFeature([Shift, Service]),
     PatientsModule,
     TutorsModule,
     AppointmentsModule,
