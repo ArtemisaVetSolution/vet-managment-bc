@@ -13,6 +13,10 @@ import { ShiftSeeder } from './common/seeds/shifts.seed';
 import { Shift } from './shifts/entities/shift.entity';
 import { Service } from './services/entities/service.entity';
 import { ServiceSeeder } from './common/seeds/services.seed';
+import { PatientsModule } from './patients/patients.module';
+import { TutorsModule } from './tutors/tutors.module';
+import { AppointmentsModule } from './appointments/appointments.module';
+
 
 
 
@@ -33,6 +37,9 @@ import { ServiceSeeder } from './common/seeds/services.seed';
     ShiftsModule,
     ServicesModule,
     TypeOrmModule.forFeature([Shift, Service])
+    PatientsModule,
+    TutorsModule,
+    AppointmentsModule,
   ],
   providers: [
     LoggerService,
