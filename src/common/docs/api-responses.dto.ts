@@ -37,7 +37,7 @@ export class ApiSuccessResponseDto<T> {
   }
 
   export class ApiNotFoundResponseDto {
-    @ApiProperty({ example: 400, description: 'The HTTP status code' })
+    @ApiProperty({ example: 404, description: 'The HTTP status code' })
     statusCode: number;
   
     @ApiProperty({ description: 'An array of field error messages', default: 'Resource not found' })
@@ -48,7 +48,7 @@ export class ApiSuccessResponseDto<T> {
   }
 
   export class ApiUnauthorizedResponseDto {
-    @ApiProperty({ example: 400, description: 'The HTTP status code' })
+    @ApiProperty({ example: 401, description: 'The HTTP status code' })
     statusCode: number;
   
     @ApiProperty({ description: 'An array of field error messages', default: "You don't have access" })
@@ -59,7 +59,7 @@ export class ApiSuccessResponseDto<T> {
   }
 
   export class ApiForbiddenResponseDto {
-    @ApiProperty({ example: 400, description: 'The HTTP status code' })
+    @ApiProperty({ example: 403, description: 'The HTTP status code' })
     statusCode: number;
   
     @ApiProperty({ description: 'An array of field error messages', default: "You don't have permission to acces this resource" })

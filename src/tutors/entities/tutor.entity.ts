@@ -6,6 +6,9 @@ export class Tutor {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
+    @Column()
+    name: string;
+
     @Column({ name: 'identification_number'})
     identificationNumber: number;
 
@@ -26,7 +29,6 @@ export class Tutor {
     @UpdateDateColumn({
         name: 'updated_at',
         type: 'timestamptz',
-        default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
         onUpdate: `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
         select: false,
     })
