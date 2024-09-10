@@ -9,6 +9,7 @@ import { InterceptorsModule } from './common/interceptors/interceptors.module';
 import { CommonModule } from './common/common.module';
 import { CollaboratorsModule } from './collaborators/collaborators.module';
 import { ShiftsModule } from './shifts/shifts.module';
+import { ServicesModule } from './services/services.module';
 
 
 
@@ -27,6 +28,7 @@ import { ShiftsModule } from './shifts/shifts.module';
     CommonModule,
     CollaboratorsModule,
     ShiftsModule,
+    ServicesModule,
   ],
   providers: [
     LoggerService,

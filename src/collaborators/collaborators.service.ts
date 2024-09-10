@@ -1,11 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Collaborator } from './entities/collaborator.entity';
+import { Repository } from 'typeorm';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @Injectable()
 export class CollaboratorsService {
+
+  constructor(
+    @InjectRepository(Collaborator) private collaboratorRepository: Repository<Collaborator>,
+  ) {} 
+
+  @CatchErrors()
   create(createCollaboratorDto: CreateCollaboratorDto) {
-    return 'This action adds a new collaborator';
+    return this.collaboratorRepository.save(createCollaboratorDto);
   }
 
   findAll() {
