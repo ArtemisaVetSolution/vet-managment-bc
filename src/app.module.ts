@@ -9,6 +9,7 @@ import { InterceptorsModule } from './common/interceptors/interceptors.module';
 import { CommonModule } from './common/common.module';
 import { PatientsModule } from './patients/patients.module';
 import { TutorsModule } from './tutors/tutors.module';
+import { AppointmentsModule } from './appointments/appointments.module';
 
 
 
@@ -27,6 +28,7 @@ import { TutorsModule } from './tutors/tutors.module';
     CommonModule,
     PatientsModule,
     TutorsModule,
+    AppointmentsModule,
   ],
   providers: [
     LoggerService,

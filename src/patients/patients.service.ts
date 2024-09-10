@@ -18,7 +18,10 @@ export class PatientsService {
   @CatchErrors()
   async create(createPatientDto: CreatePatientDto) {
 
-    const tutor: Tutor = await this.tutorsRepository.findOne({ where: { id: createPatientDto.tutorId } });
+    console.log(createPatientDto.tutorId)
+
+    const tutor: Tutor = await this.tutorsRepository.findOneBy({ id: 1});
+    console.log(tutor)
 
     if (!tutor) throw new NotFoundException('Tutor was not found');
 
@@ -63,9 +66,7 @@ export class PatientsService {
   async update(id: number, updatePatientDto: UpdatePatientDto) {
     const result = await this.patientsRepository.update(id, updatePatientDto);
 
-    if (result.affected === 0) {
-      throw new NotFoundException('Patient not found');
-    }
+    if (!result.affected) throw new NotFoundException('Patient not found');
 
     return await this.patientsRepository.findOne({ where: { id } });
   }

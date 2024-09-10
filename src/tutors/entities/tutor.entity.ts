@@ -15,29 +15,28 @@ export class Tutor {
     @OneToMany(() => Patient, (patient) => patient.tutor)
     patients: Patient[];
 
-    // @CreateDateColumn({
-    //     name: 'created_at',
-    //     type: 'timestamptz',
-    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-    //     select: false,
-    // })
-    // createdAt: Date;
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamptz',
+        default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+        select: false,
+    })
+    createdAt: Date;
 
-    // @UpdateDateColumn({
-    //     name: 'updated_at',
-    //     type: 'timestamptz',
-    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-    //     onUpdate: `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-    //     select: false,
-    // })
-    // updatedAt: Date;
-
-    // @DeleteDateColumn({
-    //     name: 'deleted_at',
-    //     type: 'timestamptz',
-    //     default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-    //     select: false,
-    // })
-    // deletedAt: Date;
+    @UpdateDateColumn({
+        name: 'updated_at',
+        type: 'timestamptz',
+        default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+        onUpdate: `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
+        select: false,
+    })
+    updatedAt: Date;
+ 
+    @DeleteDateColumn({
+        name: 'deleted_at',
+        type: 'timestamptz',
+        select: false,
+    })
+    deletedAt: Date;
 
 }

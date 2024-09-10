@@ -11,6 +11,7 @@ async function bootstrap() {
   const logger = app.get(LoggerService)
 
   const configService = app.get(ConfigService);
+  
   const port = configService.get<number>('PORT') || 3000;
 
   SwaggerConfig(app);
