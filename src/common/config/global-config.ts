@@ -9,7 +9,7 @@ export const setupGlobalConfig = (app: INestApplication<any>, logger: LoggerServ
     transform: true,
     whitelist: true,
     stopAtFirstError: true,
-    forbidNonWhitelisted: true,
+    forbidNonWhitelisted: false,
     transformOptions: {
       enableImplicitConversion: true,
     },
