@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber } from "class-validator";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
 
 export class CreateCollaboratorDto extends CreateUserDto {
@@ -8,5 +8,8 @@ export class CreateCollaboratorDto extends CreateUserDto {
   @IsNotEmpty()
   @Transform(({ value }) => parseInt(value))
   shiftId: number;
+
+  @IsArray()
+  servicesId: number[]
 
 }
