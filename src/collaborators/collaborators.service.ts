@@ -15,6 +15,7 @@ export class CollaboratorsService {
 
   @CatchErrors()
   create(createCollaboratorDto: CreateCollaboratorDto) {
+    
     return this.collaboratorRepository.save(createCollaboratorDto);
   }
 
