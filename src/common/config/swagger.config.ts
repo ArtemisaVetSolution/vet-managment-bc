@@ -8,14 +8,14 @@ export const SwaggerConfig = (app: INestApplication<any>): void => {
         .setDescription(`Vet management software`)
         .setVersion(versionApp)   
         .addServer('/api')   
-        // .addBearerAuth(
-        //     {
-        //       type: 'http',
-        //       scheme: 'bearer',
-        //       bearerFormat: 'JWT',
-        //     },
-        //     'access-token'
-        // )
+        .addBearerAuth(
+            {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+            },
+            'access-token'
+        )
         .build();
 
     const document = SwaggerModule.createDocument(app, config);

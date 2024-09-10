@@ -12,8 +12,8 @@ export class Tutor {
     @Column({ name: 'identification_number'})
     identificationNumber: number;
 
-    @Column({ name: 'user_id'})
-    userId: number;
+    @Column({ name: 'user_id', type: 'uuid'})
+    userId: string;
 
     @OneToMany(() => Patient, (patient) => patient.tutor)
     patients: Patient[];

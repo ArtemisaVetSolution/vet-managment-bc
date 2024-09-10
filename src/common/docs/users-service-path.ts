@@ -1,0 +1,1 @@
+export const userPath = 'http://users-service:3001/api'
