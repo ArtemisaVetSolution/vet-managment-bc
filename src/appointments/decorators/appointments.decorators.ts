@@ -85,3 +85,27 @@ export function ApiDocUpdateAppointment<T>(entity: Type<T>) {
         ApiNotFound()
     )
 }
+
+export function ApiDocGetAvailableHours<T>(entity: Type<T>) {
+    return applyDecorators(
+        ApiOperation({
+            summary: 'Get available hours',
+            description: 'Retrieves a list of the available hours by collaborator ID and date'
+        }),
+        ApiQuery({
+            name: 'collaboratorId',
+            type: Number,
+            required: true,
+            description: 'ID of the collaborator'
+        }),
+        ApiQuery({
+            name: 'date',
+            type: Date,
+            required: true,
+            description: 'The date to check availability'
+        }),
+        ApiSuccessResponses(entity),
+        ApiBadRequest(),
+        ApiNotFound()
+    )
+}

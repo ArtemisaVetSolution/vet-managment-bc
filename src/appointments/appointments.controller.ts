@@ -3,15 +3,23 @@ import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { AppointmentsQueryDto } from './dto/appointments-query.dto';
-import { ApiDocCreateAppointment, ApiDocGetAppointments, ApiDocGetOneAppointment, ApiDocUpdateAppointment } from './decorators/appointments.decorators';
+import { ApiDocCreateAppointment, ApiDocGetAppointments, ApiDocGetAvailableHours, ApiDocGetOneAppointment, ApiDocUpdateAppointment } from './decorators/appointments.decorators';
 import { AppointmentResponseDto } from './dto/appointment-response.dto';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { AvailableAppointmentsDto } from './dto/available-appointments-query.dto';
+import { AvailabilityResponse } from './dto/availability-response.dto';
 
 @ApiTags('Appointments')
-@ApiExtraModels(AppointmentResponseDto)
+@ApiExtraModels(AppointmentResponseDto, AvailabilityResponse)
 @Controller('appointments')
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) { }
+
+  @ApiDocGetAvailableHours(AvailabilityResponse)
+  @Get('available')
+  getAvailableTime(@Query() query: AvailableAppointmentsDto) {
+    return this.appointmentsService.getAvailableAppointments(query);
+  }
 
   @ApiDocCreateAppointment(AppointmentResponseDto)
   @Post()

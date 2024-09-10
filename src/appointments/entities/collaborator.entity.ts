@@ -9,6 +9,12 @@ export class Collaborator {
     @Column()
     name: string;
 
+    @Column({ default: '08:00:00'})
+    startTime: string;
+
+    @Column({ default: '17:00:00'})
+    endTime: string;
+
     @OneToMany(() => Appointment, (appointment) => appointment.collaborator)
     appointments: Appointment[];
 }
