@@ -6,12 +6,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Appointment } from './entities/appointment.entity';
 import { Not, Repository } from 'typeorm';
 import { PatientsService } from 'src/patients/patients.service';
-import { Service } from './entities/service.entity';
-import { Collaborator } from './entities/collaborator.entity';
 import { AppointmentState } from 'src/common/enums/appointment-state.enum';
 import { AppointmentsQueryDto } from './dto/appointments-query.dto';
 import { AvailableAppointmentsDto } from './dto/available-appointments-query.dto';
 import { addHours, format, parse, subHours } from 'date-fns';
+import { Service } from 'src/services/entities/service.entity';
+import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
 
 @Injectable()
 export class AppointmentsService {
@@ -94,18 +94,18 @@ export class AppointmentsService {
 
   @CatchErrors()
   async getAvailableAppointments(availableAppointmentsDto: AvailableAppointmentsDto) {
-    const collaborator = await this.collaboratorsRepository.findOneBy({ id: availableAppointmentsDto.collaboratorId });
+    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: availableAppointmentsDto.collaboratorId }, relations: [' shift ']} );
     if (!collaborator) throw new NotFoundException('Collaborator not found');
 
     const appointments = await this.appointmentsRepository.find({ where: { collaborator, date: availableAppointmentsDto.date } });
 
     const busyHours = appointments.map(appointment => appointment.time);
 
-    const hoursList = await this.getHoursInRange(collaborator.startTime, collaborator.endTime); //luego cambiar por las horas de shift del colaborador
+    // const hoursList = await this.getHoursInRange(collaborator.startTime, collaborator.endTime); //luego cambiar por las horas de shift del colaborador
 
-    const availableHours = hoursList.filter((hour) => !busyHours.includes(hour));
+    // const availableHours = hoursList.filter((hour) => !busyHours.includes(hour));
 
-    return { availableHours };
+    return { availableHours: 'revisar' };
   }
 
   @CatchErrors()

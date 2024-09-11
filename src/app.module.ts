@@ -15,10 +15,10 @@ import { HttpModule } from '@nestjs/axios';
 import { CollaboratorsModule } from './collaborators/collaborators.module';
 import { ShiftsModule } from './shifts/shifts.module';
 import { ServicesModule } from './services/services.module';
-import { Shift } from './shifts/entities/shift.entity';
-import { Service } from './appointments/entities/service.entity';
 import { ServiceSeeder } from './common/seeds/services.seed';
 import { ShiftSeeder } from './common/seeds/shifts.seed';
+import { Service } from './services/entities/service.entity';
+import { Shift } from './shifts/entities/shift.entity';
 
 @Module({
   imports: [
