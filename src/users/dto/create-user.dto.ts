@@ -30,7 +30,7 @@ import {
     })
     password: string;
   
-    @ApiProperty({ description: 'Cellphone of the user', example: '3003965473'})
+    @ApiProperty({ description: 'Cellphone of the user', example: '+57 3003965473'})
     @IsString()
     @IsPhoneNumber(null, {
       message: 'cellphone The cellphone number must be a valid phone number',

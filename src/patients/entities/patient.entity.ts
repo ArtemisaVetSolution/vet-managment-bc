@@ -2,6 +2,7 @@ import { Appointment } from "src/appointments/entities/appointment.entity";
 import { Gender } from "src/common/enums/gender.enum";
 import { Species } from "src/common/enums/species.enum";
 import { Tutor } from "src/tutors/entities/tutor.entity";
+
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('patients')
