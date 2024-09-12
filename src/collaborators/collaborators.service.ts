@@ -51,7 +51,7 @@ export class CollaboratorsService {
       userId,
       services: services,
     });  
-    console.log(newCollaborator);
+
     return this.collaboratorRepository.save(newCollaborator);
   }
 

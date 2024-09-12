@@ -110,7 +110,6 @@ export class AppointmentsService {
     const busyHours = appointments.map(appointment => appointment.time);
 
     const hoursList = await this.getHoursInRange(collaborator.shift.startTime, collaborator.shift.endTime); 
-    console.log(collaborator.shift)
 
     const availableHours = hoursList.filter((hour) => !busyHours.includes(hour));
 

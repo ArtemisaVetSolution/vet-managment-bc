@@ -20,7 +20,6 @@ export class PatientsService {
   async create(createPatientDto: CreatePatientDto) {
 
     const tutor: Tutor = await this.tutorsRepository.findOneBy({ id: createPatientDto.tutorId});
-    console.log(tutor)
 
     if (!tutor) throw new NotFoundException('Tutor was not found');
 
