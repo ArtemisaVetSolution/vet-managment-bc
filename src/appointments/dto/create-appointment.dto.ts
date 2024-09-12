@@ -13,7 +13,7 @@ export class CreateAppointmentDto {
     @MinDate(currentDate)
     date: Date;
 
-    @ApiProperty({ description: 'The time of the appointment', example: '12:00:00', type: String})
+    @ApiProperty({ description: 'The time of the appointment', example: '12:00', type: String})
     @IsNotEmpty()
     time: string;
 

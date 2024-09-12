@@ -18,14 +18,9 @@ export class ShiftSeeder {
         endTime: '16:00'
       },
       {
-        name: 'afternoon',
-        startTime: '16:00',
-        endTime: '00:00'
-      },
-      {
-        name: 'night',
-        startTime: '00:00',
-        endTime: '08:00'
+        name: 'Afternoon',
+        startTime: '14:00',
+        endTime: '22:00'
       }
     ];
 

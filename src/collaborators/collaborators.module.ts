@@ -8,6 +8,7 @@ import { Service } from 'src/services/entities/service.entity';
 import { ShiftsService } from 'src/shifts/shifts.service';
 import { Shift } from 'src/shifts/entities/shift.entity';
 
+
 @Module({
   controllers: [CollaboratorsController],
   providers: [CollaboratorsService, ServicesService, ShiftsService],

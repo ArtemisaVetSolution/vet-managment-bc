@@ -1,7 +1,8 @@
-import { Shift } from 'src/shifts/entities/shift.entity';
+
 import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, ManyToMany, JoinTable, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
 import { Service } from 'src/services/entities/service.entity';
 import { Appointment } from 'src/appointments/entities/appointment.entity';
+import { Shift } from 'src/shifts/entities/shift.entity';
 
 @Entity('collaborators')
 export class Collaborator {
