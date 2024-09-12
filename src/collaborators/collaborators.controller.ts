@@ -5,9 +5,13 @@ import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ApiDocCreateCollaborator } from './decorators/collaborators.decorators';
 import { CreatedCollaboratorResponseDto } from './dto/response-create-collaborator';
+import { Leave, Path } from 'src/common/enums';
+import { PathName, VerifyAuthService } from 'src/common/decorators/auth.decorator';
+
 
 @ApiTags('Collaborators')
 @ApiExtraModels(CreatedCollaboratorResponseDto)
+@PathName(Path.COLLABORATOR)
 @Controller('collaborators')
 export class CollaboratorsController {
   constructor(private readonly collaboratorsService: CollaboratorsService) {}
@@ -17,7 +21,8 @@ export class CollaboratorsController {
   create(@Body() createCollaboratorDto: CreateCollaboratorDto) {
     return this.collaboratorsService.create(createCollaboratorDto);
   }
-
+  
+  @VerifyAuthService(Leave.CAN_READ)
   @Get()
   findAll() {
     return this.collaboratorsService.findAll();

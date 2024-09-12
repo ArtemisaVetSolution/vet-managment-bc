@@ -55,6 +55,7 @@ export class CollaboratorsService {
     return this.collaboratorRepository.save(newCollaborator);
   }
 
+ 
   @CatchErrors()
   async findAll() {
     const collaborators = await this.collaboratorRepository.find({
