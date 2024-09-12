@@ -5,8 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
-import { Tutor } from 'src/tutors/entities/tutor.entity';
+
 import { PatientQueryDto } from './dto/patient-query.dto';
+import { Tutor } from 'src/tutors/entities/tutor.entity';
 
 @Injectable()
 export class PatientsService {
@@ -18,9 +19,7 @@ export class PatientsService {
   @CatchErrors()
   async create(createPatientDto: CreatePatientDto) {
 
-    console.log(createPatientDto.tutorId)
-
-    const tutor: Tutor = await this.tutorsRepository.findOneBy({ id: 1});
+    const tutor: Tutor = await this.tutorsRepository.findOneBy({ id: createPatientDto.tutorId});
     console.log(tutor)
 
     if (!tutor) throw new NotFoundException('Tutor was not found');
