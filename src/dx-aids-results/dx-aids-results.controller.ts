@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { DxAidsResultsService } from './dx-aids-results.service';
 import { CreateDxAidsResultDto } from './dto/create-dx-aids-result.dto';
 import { UpdateDxAidsResultDto } from './dto/update-dx-aids-result.dto';
+import { DxAidsQueryDto } from './dto/dx-aids-query.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('dx-aids-results')
+@ApiTags('Tests Results')
+@Controller('tests-results')
 export class DxAidsResultsController {
   constructor(private readonly dxAidsResultsService: DxAidsResultsService) {}
 
@@ -13,8 +16,8 @@ export class DxAidsResultsController {
   }
 
   @Get()
-  findAll() {
-    return this.dxAidsResultsService.findAll();
+  findAllOrFilter(@Query() query: DxAidsQueryDto) {
+    return this.dxAidsResultsService.findAllOrFilter(query);
   }
 
   @Get(':id')
@@ -25,10 +28,5 @@ export class DxAidsResultsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDxAidsResultDto: UpdateDxAidsResultDto) {
     return this.dxAidsResultsService.update(+id, updateDxAidsResultDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.dxAidsResultsService.remove(+id);
   }
 }
