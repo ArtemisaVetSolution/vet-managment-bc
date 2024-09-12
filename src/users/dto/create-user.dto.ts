@@ -37,8 +37,4 @@ import {
     })
     cellphone: string;
   
-    @ApiPropertyOptional({ description: 'Role of the user', example: 'Tutor'})
-    @IsString()
-    @IsOptional()
-    rol?: string;
   }

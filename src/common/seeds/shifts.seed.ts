@@ -13,7 +13,7 @@ export class ShiftSeeder {
   async seed() {
     const shifts = [
       {
-        name: 'Morning',
+        name: 'morning',
         startTime: '08:00',
         endTime: '16:00'
       },
