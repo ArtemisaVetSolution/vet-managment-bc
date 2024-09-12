@@ -2,11 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CollaboratorsService } from './collaborators.service';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { ApiDocCreateCollaborator } from './decorators/collaborators.decorators';
+import { CreatedCollaboratorResponseDto } from './dto/response-create-collaborator';
 
+@ApiTags('Collaborators')
+@ApiExtraModels(CreatedCollaboratorResponseDto)
 @Controller('collaborators')
 export class CollaboratorsController {
   constructor(private readonly collaboratorsService: CollaboratorsService) {}
 
+  @ApiDocCreateCollaborator(CreatedCollaboratorResponseDto)
   @Post()
   create(@Body() createCollaboratorDto: CreateCollaboratorDto) {
     return this.collaboratorsService.create(createCollaboratorDto);

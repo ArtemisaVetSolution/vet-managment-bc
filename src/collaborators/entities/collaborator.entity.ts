@@ -12,8 +12,8 @@ export class Collaborator {
   @JoinColumn({ name: 'shift_id' })
   shift: Shift;
 
-  @Column( { name: 'user_id' })
-  userId: number;
+  @Column({ name: 'user_id', type: 'uuid'})
+  userId: string;
 
   @ManyToMany(() => Service)
   @JoinTable({name: 'collaborators_services'})

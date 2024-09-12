@@ -8,6 +8,7 @@ import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { ServicesService } from 'src/services/services.service';
 import { ShiftsService } from 'src/shifts/shifts.service';
 import axios from 'axios';  // Importa axios correctamente
+import { userPath } from 'src/common/docs/users-service-path';
 
 @Injectable()
 export class CollaboratorsService {
@@ -20,6 +21,14 @@ export class CollaboratorsService {
 
   @CatchErrors()
   async create(createCollaboratorDto: CreateCollaboratorDto) {
+    const newUser = await axios.post( userPath + '/auth/register', {
+      email: createCollaboratorDto.email,
+      name: createCollaboratorDto.name,
+      password: createCollaboratorDto.password,
+      cellphone: createCollaboratorDto.cellphone,
+      role: 'collaborator'
+    });
+    const userId = newUser.data.data;
     let servicesExists = true;
     const services = [];
     for (const serviceId of createCollaboratorDto.servicesId) {
@@ -37,9 +46,6 @@ export class CollaboratorsService {
     if (!shift) {
       throw new NotFoundException('Shift not found');
     }
-    // const userId = await axios.get('http://localhost:3000/users');
-    const userId = 0;
-     //mock
     const newCollaborator = this.collaboratorRepository.create({
       shift : shift,
       userId,
