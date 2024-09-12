@@ -10,7 +10,7 @@ import { CommonModule } from './common/common.module';
 import { PatientsModule } from './patients/patients.module';
 import { TutorsModule } from './tutors/tutors.module';
 import { AppointmentsModule } from './appointments/appointments.module';
-import { JwtValidationGuard } from './common/guard/jwt.guard';
+import { JwtValidationGuard } from './common/guards/jwt.guard';
 import { HttpModule } from '@nestjs/axios';
 import { CollaboratorsModule } from './collaborators/collaborators.module';
 import { ShiftsModule } from './shifts/shifts.module';
@@ -20,6 +20,7 @@ import { ShiftSeeder } from './common/seeds/shifts.seed';
 import { Service } from './services/entities/service.entity';
 import { Shift } from './shifts/entities/shift.entity';
 import { DxAidsResultsModule } from './dx-aids-results/dx-aids-results.module';
+import { AxiosHttpAdapter } from './common/http/axios-http-adapter';
 
 @Module({
   imports: [
