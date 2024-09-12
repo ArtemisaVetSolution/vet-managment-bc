@@ -19,6 +19,7 @@ import { ServiceSeeder } from './common/seeds/services.seed';
 import { ShiftSeeder } from './common/seeds/shifts.seed';
 import { Service } from './services/entities/service.entity';
 import { Shift } from './shifts/entities/shift.entity';
+import { DxAidsResultsModule } from './dx-aids-results/dx-aids-results.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { Shift } from './shifts/entities/shift.entity';
     PatientsModule,
     TutorsModule,
     AppointmentsModule,
-    HttpModule
+    HttpModule,
+    DxAidsResultsModule
   ],
   providers: [
     LoggerService,
