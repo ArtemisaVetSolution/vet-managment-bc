@@ -1,8 +1,9 @@
+import { AuditableEntity } from "src/common/entities/auditable.entity";
 import { Patient } from "src/patients/entities/patient.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('tutors')
-export class Tutor {
+export class Tutor extends AuditableEntity{
     @PrimaryGeneratedColumn('increment')
     id: number;
 
@@ -17,28 +18,4 @@ export class Tutor {
 
     @OneToMany(() => Patient, (patient) => patient.tutor)
     patients: Patient[];
-
-    @CreateDateColumn({
-        name: 'created_at',
-        type: 'timestamptz',
-        default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-        select: false,
-    })
-    createdAt: Date;
-
-    @UpdateDateColumn({
-        name: 'updated_at',
-        type: 'timestamptz',
-        onUpdate: `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-        select: false,
-    })
-    updatedAt: Date;
- 
-    @DeleteDateColumn({
-        name: 'deleted_at',
-        type: 'timestamptz',
-        select: false,
-    })
-    deletedAt: Date;
-
 }

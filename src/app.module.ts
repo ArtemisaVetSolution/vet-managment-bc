@@ -19,7 +19,7 @@ import { ServiceSeeder } from './common/seeds/services.seed';
 import { ShiftSeeder } from './common/seeds/shifts.seed';
 import { Service } from './services/entities/service.entity';
 import { Shift } from './shifts/entities/shift.entity';
-import { AxiosHttpAdapter } from './common/http/axios-http-adapter';
+import { TestsResultsModule } from './tests-results/tests-results.module';
 
 @Module({
   imports: [
@@ -41,7 +41,8 @@ import { AxiosHttpAdapter } from './common/http/axios-http-adapter';
     PatientsModule,
     TutorsModule,
     AppointmentsModule,
-    HttpModule
+    HttpModule,
+    TestsResultsModule
   ],
   providers: [
     LoggerService,
