@@ -9,6 +9,7 @@ import { ServicesService } from 'src/services/services.service';
 import { ShiftsService } from 'src/shifts/shifts.service';
 import axios from 'axios';  // Importa axios correctamente
 import { userPath } from 'src/common/docs/users-service-path';
+import { CollaboratorQueryDto } from './dto/collaborator-query.dto';
 
 @Injectable()
 export class CollaboratorsService {
@@ -50,22 +51,33 @@ export class CollaboratorsService {
       shift : shift,
       userId,
       services: services,
+      name: createCollaboratorDto.name
     });  
     console.log(newCollaborator);
     return this.collaboratorRepository.save(newCollaborator);
   }
 
   @CatchErrors()
-  async findAll() {
-    const collaborators = await this.collaboratorRepository.find({
-      relations: ['shift', 'services'],  
-      withDeleted: false,
-    });
-    if (!collaborators) {
+  async findWithQueryParams(collaboratorQuery: CollaboratorQueryDto) {
+    const query = this.collaboratorRepository.createQueryBuilder('collaborator')
+      .leftJoinAndSelect('collaborator.shift', 'shift')
+      .leftJoinAndSelect('collaborator.services', 'services');
+
+    if (collaboratorQuery.shift) {
+      const shift = await this.shiftService.findOneByName(collaboratorQuery.shift);
+      query.andWhere('collaborator.shift = :shift', { shift: shift.id });
+    }
+    if (collaboratorQuery.serviceId) {
+      const service = await this.serviceService.findOne(collaboratorQuery.serviceId);
+      query.andWhere('services.id = :serviceId', { serviceId: collaboratorQuery.serviceId });
+    }
+    const collaborators = await query.getMany();
+    if (!collaborators || collaborators.length === 0) {
       throw new NotFoundException('Collaborators not found');
     }
     return collaborators;
   }
+
 
   @CatchErrors()
   async findOne(id: number) {
