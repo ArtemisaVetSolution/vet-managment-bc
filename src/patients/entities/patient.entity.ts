@@ -2,7 +2,7 @@ import { Appointment } from "src/appointments/entities/appointment.entity";
 import { AuditableEntity } from "src/common/entities/auditable.entity";
 import { Gender } from "src/common/enums/gender.enum";
 import { Species } from "src/common/enums/species.enum";
-import { DxAidsResult } from "src/dx-aids-results/entities/dx-aids-result.entity";
+import { TestResult } from "src/tests-results/entities/test-result.entity";
 import { Tutor } from "src/tutors/entities/tutor.entity";
 
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -51,7 +51,7 @@ export class Patient extends AuditableEntity {
     @OneToMany(() => Appointment, (appointment) => appointment.patient)
     appointments: Appointment[];
 
-    @OneToMany(() => DxAidsResult, (dxAidsResult) => dxAidsResult.patient)
-    dxAidsResults: DxAidsResult[];
+    @OneToMany(() => TestResult, (testResult) => testResult.patient)
+    testsResults: TestResult[];
 
 }

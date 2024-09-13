@@ -1,12 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class CreateDxAidsResultDto {
-    @ApiProperty({ description: 'The results of the diagnostic aid', example: 'El análisis de sangre muestra niveles normales de glóbulos rojos y blancos, con una ligera elevación en las enzimas hepáticas, lo que podría sugerir estrés o una leve inflamación. Los niveles de glucosa y creatinina están dentro del rango esperado, indicando una buena función renal y metabólica.'})
-    @IsString()
-    @IsNotEmpty()
-    result: string;
+export class CreateTestResultDto {
 
     @ApiProperty({ description: 'The date of the test', example: '2024-09-30'})
     @IsNotEmpty()
@@ -23,4 +19,8 @@ export class CreateDxAidsResultDto {
     @IsNotEmpty()
     @IsNumber()
     serviceId: number;
+
+    @ApiProperty({ type: 'string', format: 'binary' })
+    file: any;
 }
+

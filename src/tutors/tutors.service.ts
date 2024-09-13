@@ -1,6 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import axios from 'axios';
 import { Repository } from 'typeorm';
 
 import { CreateTutorDto } from './dto/create-tutor.dto';
@@ -8,23 +7,25 @@ import { UpdateTutorDto } from './dto/update-tutor.dto';
 import { Tutor } from './entities/tutor.entity';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { userPath } from 'src/common/docs/users-service-path';
+import { IHttpAdapter } from 'src/common/interfaces';
 
 @Injectable()
 export class TutorsService {
   constructor(
-    @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>
+    @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>,
+    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter
   ) { }
 
   @CatchErrors()
   async create(createTutorDto: CreateTutorDto) {
-    const newUser = await axios.post(userPath + '/auth/register', {
+    const newUser = await this.httpAdapter.post<{ data: string}>(userPath + '/auth/register', {
       email: createTutorDto.email,
       name: createTutorDto.name,
       password: createTutorDto.password,
       cellphone: createTutorDto.cellphone
     });
 
-    const userId = newUser.data.data;
+    const userId = newUser.data;
 
     const newTutor = this.tutorsRepository.create({ identificationNumber: createTutorDto.identificationNumber, userId, name: createTutorDto.name });
     return await this.tutorsRepository.save(newTutor);

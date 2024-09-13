@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsDate, IsNumber, IsOptional } from "class-validator";
 
-export class DxAidsQueryDto {
+export class TestResultQueryDto {
     @ApiPropertyOptional({ description: 'Patient ID', example: 1})
     @IsOptional()
     @IsNumber()

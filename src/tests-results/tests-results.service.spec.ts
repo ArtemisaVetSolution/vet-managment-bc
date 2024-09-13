@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DxAidsResultsService } from './dx-aids-results.service';
+import { TestsResultsService } from './tests-results.service';
 
-describe('DxAidsResultsService', () => {
-  let service: DxAidsResultsService;
+describe('TestResultsService', () => {
+  let service: TestsResultsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DxAidsResultsService],
+      providers: [TestsResultsService],
     }).compile();
 
-    service = module.get<DxAidsResultsService>(DxAidsResultsService);
+    service = module.get<TestsResultsService>(TestsResultsService);
   });
 
   it('should be defined', () => {

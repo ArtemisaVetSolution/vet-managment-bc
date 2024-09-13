@@ -1,9 +1,8 @@
 import { Type, applyDecorators } from "@nestjs/common"
-import { ApiOperation, ApiBody, ApiQuery, ApiParam } from "@nestjs/swagger"
+import { ApiOperation, ApiBody, ApiQuery, ApiParam, ApiConsumes } from "@nestjs/swagger"
 import { ApiCreated, ApiBadRequest, ApiSuccessResponsesArray, ApiNotFound, ApiSuccessResponses } from "src/common/decorators/swagger.decorators"
-import { CreatePatientDto } from "src/patients/dto/create-patient.dto"
-import { UpdatePatientDto } from "src/patients/dto/update-patient.dto"
-import { CreateDxAidsResultDto } from "../dto/create-dx-aids-result.dto"
+import { CreateTestResultDto } from "../dto/create-test-result.dto"
+import { UpdateTestResultDto } from "../dto/update-test-result.dto"
 
 export function ApiDocCreateResult<T>(entity: Type<T>) {
     return applyDecorators(
@@ -11,8 +10,9 @@ export function ApiDocCreateResult<T>(entity: Type<T>) {
             summary: 'Creates a new diagnostic aid result',
             description: 'This endpoint allows to create a new diagnostic result.'
         }),
+        ApiConsumes('multipart/form-data'),
         ApiBody({
-            type: CreateDxAidsResultDto
+            type: CreateTestResultDto
         }),
         ApiCreated(entity),
         ApiBadRequest()
@@ -72,7 +72,7 @@ export function ApiDocUpdateResult<T>(entity: Type<T>) {
             description: 'This endpoint allows to update one patient with the provided ID'
         }),
         ApiBody({
-            type: UpdatePatientDto
+            type: UpdateTestResultDto
         }),
         ApiParam({
             name: 'id',
