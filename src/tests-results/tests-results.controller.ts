@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UploadedFile, UseInterceptors, StreamableFile, Res } from '@nestjs/common';
 import { TestsResultsService } from './tests-results.service';
 import { CreateTestResultDto } from './dto/create-test-result.dto';
 import { UpdateTestResultDto } from './dto/update-test-result.dto';
@@ -9,6 +9,7 @@ import { diskStorage } from 'multer';
 import { UploadPath } from 'src/common/enums/upload-path.enum';
 import { fileNameHelper } from './helpers/file-name.helper';
 import { ApiDocCreateResult } from './decorators/test-results.decorators';
+import { Response } from 'express';
 
 @ApiTags('Tests Results')
 @Controller('tests-results')
@@ -32,6 +33,13 @@ export class TestsResultsController {
   ) {
     createTestResultDto.file = file;
     return this.testsResultsService.create(createTestResultDto)
+  }
+
+  @Get('/file/:id')
+  downloadFile(
+    @Param('id') id: number,
+    @Res() res: Response) {
+    return this.testsResultsService.downloadFile(+id, res)
   }
 
   @Get()

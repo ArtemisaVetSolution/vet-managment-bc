@@ -8,6 +8,9 @@ import { Repository } from 'typeorm';
 import { PatientsService } from 'src/patients/patients.service';
 import { ServicesService } from 'src/services/services.service';
 import { TestResultQueryDto } from './dto/test-result-query.dto';
+import { Response } from 'express';
+import { join } from 'path';
+import { createReadStream, existsSync } from 'fs';
 
 @Injectable()
 export class TestsResultsService {
@@ -76,4 +79,25 @@ export class TestsResultsService {
     return await this.testsResultsRepository.findOne({ where: { id } });
   }
 
+  @CatchErrors()
+  async downloadFile(id: number, res: Response) {
+    const result = await this.findOne(id);
+    const path = join(process.cwd(), result.filePath
+  );
+
+  if (!existsSync(path)) {
+    throw new NotFoundException('File not found on the server');
+  }
+
+
+    const mimetype = result.fileMimetype;
+
+    const file = createReadStream(path);
+    res.set({
+      'Content-Type': mimetype,
+      'Content-Disposition': `inline; filename="${result.fileName}"`
+    })
+
+    return file.pipe(res);
+  }
 }

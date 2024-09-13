@@ -18,7 +18,7 @@ export class TutorsService {
 
   @CatchErrors()
   async create(createTutorDto: CreateTutorDto) {
-    const newUser = await this.httpAdapter.post<{ data: string}>(userPath + '/auth/register', {
+    const newUser = await this.httpAdapter.post<{ data: string }>(userPath + '/auth/register', {
       email: createTutorDto.email,
       name: createTutorDto.name,
       password: createTutorDto.password,
