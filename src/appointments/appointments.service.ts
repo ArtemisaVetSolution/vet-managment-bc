@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
@@ -27,12 +27,16 @@ export class AppointmentsService {
 
     //Falta verificar que la cita esté dentro del shift del colaborador
 
-    const collaborator = await this.collaboratorsRepository.findOneBy({ id: createAppointmentDto.collaboratorId })
+    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: createAppointmentDto.collaboratorId }, relations: ['shift']} );
+
+    const collaboratorShift = await this.getHoursInRange(collaborator.shift.startTime, collaborator.shift.endTime);
+
+    if(!collaboratorShift.includes(createAppointmentDto.time)) throw new BadRequestException('Time is not on collaborator shift');
 
     //check if appointment is already taken
     const appointmentExists = await this.appointmentsRepository.findOne({ where: { date: createAppointmentDto.date, time: createAppointmentDto.time, collaborator, state: Not(AppointmentState.CANCELED) } })
 
-    if (appointmentExists) throw new ConflictException('Appointment already taken')
+    if (appointmentExists) throw new ConflictException('Appointment already taken');
 
     const patient = await this.patientsService.findOne(createAppointmentDto.patientId)
 
@@ -54,7 +58,10 @@ export class AppointmentsService {
 
   @CatchErrors()
   async findAllOrFilter(appointmentQuery: AppointmentsQueryDto) {
-    const query = this.appointmentsRepository.createQueryBuilder('appointment');
+    const query = this.appointmentsRepository.createQueryBuilder('appointment')
+    .leftJoinAndSelect('appointment.patient', 'patient')
+    .leftJoinAndSelect('appointment.service', 'service')
+    .leftJoinAndSelect('appointment.collaborator', 'collaborator');
 
     if (appointmentQuery.patientId) {
       const patient = await this.patientsService.findOne(appointmentQuery.patientId);
@@ -78,7 +85,7 @@ export class AppointmentsService {
 
   @CatchErrors()
   async findOne(id: number) {
-    const appointment = await this.appointmentsRepository.findOne({ where: { id }, relations: ['service'] });
+    const appointment = await this.appointmentsRepository.findOne({ where: { id }, relations: ['service']});
     if (!appointment) throw new NotFoundException('Appointment not found');
     return appointment;
   }
@@ -94,31 +101,32 @@ export class AppointmentsService {
 
   @CatchErrors()
   async getAvailableAppointments(availableAppointmentsDto: AvailableAppointmentsDto) {
-    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: availableAppointmentsDto.collaboratorId }, relations: [' shift ']} );
+    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: availableAppointmentsDto.collaboratorId }, relations: ['shift']} );
+
     if (!collaborator) throw new NotFoundException('Collaborator not found');
 
     const appointments = await this.appointmentsRepository.find({ where: { collaborator, date: availableAppointmentsDto.date } });
 
     const busyHours = appointments.map(appointment => appointment.time);
 
-    // const hoursList = await this.getHoursInRange(collaborator.startTime, collaborator.endTime); //luego cambiar por las horas de shift del colaborador
+    const hoursList = await this.getHoursInRange(collaborator.shift.startTime, collaborator.shift.endTime); 
 
-    // const availableHours = hoursList.filter((hour) => !busyHours.includes(hour));
+    const availableHours = hoursList.filter((hour) => !busyHours.includes(hour));
 
-    return { availableHours: 'revisar' };
+    return { availableHours };
   }
 
   @CatchErrors()
   async getHoursInRange(startTime: string, endTime: string) {
-    const start = parse(startTime, 'HH:mm:ss', new Date());
-    const end = subHours(parse(endTime, 'HH:mm:ss', new Date()), 1);
+    const start = parse(startTime, 'HH:mm', new Date());
+    const end = subHours(parse(endTime, 'HH:mm', new Date()), 1);
 
     const timeList: string[] = [];
 
     let currentTime = start;
 
     while (currentTime <= end) {
-      timeList.push(format(currentTime, 'HH:00:00'));
+      timeList.push(format(currentTime, 'HH:00'));
       currentTime = addHours(currentTime, 1);
     }
 

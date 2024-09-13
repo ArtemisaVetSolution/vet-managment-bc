@@ -7,10 +7,13 @@ import { ServicesService } from 'src/services/services.service';
 import { Service } from 'src/services/entities/service.entity';
 import { ShiftsService } from 'src/shifts/shifts.service';
 import { Shift } from 'src/shifts/entities/shift.entity';
+import { CommonModule } from 'src/common/common.module';
+
 
 @Module({
   controllers: [CollaboratorsController],
   providers: [CollaboratorsService, ServicesService, ShiftsService],
-  imports: [TypeOrmModule.forFeature([Collaborator]), TypeOrmModule.forFeature([Service]), TypeOrmModule.forFeature([Shift])],
+  imports: [TypeOrmModule.forFeature([Collaborator]), TypeOrmModule.forFeature([Service]), TypeOrmModule.forFeature([Shift]),
+  CommonModule],
 })
 export class CollaboratorsModule {}

@@ -6,9 +6,13 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ApiDocCreateCollaborator, ApiDocDeleteCollaborator, ApiDocGetCollaborators, ApiDocGetOneCollaborator, ApiDocRestoreCollaborator, ApiDocUpdateCollaborator } from './decorators/collaborators.decorators';
 import { CreatedCollaboratorResponseDto } from './dto/response-create-collaborator';
 import { CollaboratorQueryDto } from './dto/collaborator-query.dto';
+import { Leave, Path } from 'src/common/enums';
+import { PathName, VerifyAuthService } from 'src/common/decorators/auth.decorator';
+
 
 @ApiTags('Collaborators')
 @ApiExtraModels(CreatedCollaboratorResponseDto)
+@PathName(Path.COLLABORATOR)
 @Controller('collaborators')
 export class CollaboratorsController {
   constructor(private readonly collaboratorsService: CollaboratorsService) {}
@@ -20,6 +24,7 @@ export class CollaboratorsController {
   }
 
   @ApiDocGetCollaborators(CreatedCollaboratorResponseDto)
+  @VerifyAuthService(Leave.CAN_READ)
   @Get()
   findWithQueryParams(@Query() query: CollaboratorQueryDto) {
     return this.collaboratorsService.findWithQueryParams(query);

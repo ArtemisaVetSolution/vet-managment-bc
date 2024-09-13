@@ -53,10 +53,11 @@ export class CollaboratorsService {
       services: services,
       name: createCollaboratorDto.name
     });  
-    console.log(newCollaborator);
+
     return this.collaboratorRepository.save(newCollaborator);
   }
 
+ 
   @CatchErrors()
   async findWithQueryParams(collaboratorQuery: CollaboratorQueryDto) {
     const query = this.collaboratorRepository.createQueryBuilder('collaborator')

@@ -1,10 +1,12 @@
-import { Shift } from 'src/shifts/entities/shift.entity';
+
 import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, ManyToMany, JoinTable, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
 import { Service } from 'src/services/entities/service.entity';
 import { Appointment } from 'src/appointments/entities/appointment.entity';
+import { Shift } from 'src/shifts/entities/shift.entity';
+import { AuditableEntity } from 'src/common/entities/auditable.entity';
 
 @Entity('collaborators')
-export class Collaborator {
+export class Collaborator extends AuditableEntity{
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,13 +26,4 @@ export class Collaborator {
 
   @OneToMany(() => Appointment, appointment => appointment.collaborator)
   appointments: Appointment[];
-
-  @CreateDateColumn({ name: 'created_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', select: false })
-  createdAt: Date;
-
-  @CreateDateColumn({ name: 'updated_at', type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', select: false })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', select: false })
-  deletedAt: Date;
 }

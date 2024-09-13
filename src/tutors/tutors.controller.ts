@@ -1,16 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, StreamableFile, Res } from '@nestjs/common';
 import { TutorsService } from './tutors.service';
 import { CreateTutorDto } from './dto/create-tutor.dto';
 import { UpdateTutorDto } from './dto/update-tutor.dto';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ApiDocCreateTutor, ApiDocDeletetutor, ApiDocGetAllTutors, ApiDocGetOneTutor, ApiDocUpdateTutor } from './decorators/tutors.decorators';
 import { TutorResponseDto } from './dto/tutor-response.dto';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { Response } from 'express';
 
 @ApiTags('Tutors')
 @ApiExtraModels(TutorResponseDto)
 @Controller('tutors')
 export class TutorsController {
-  constructor(private readonly tutorsService: TutorsService) {}
+  constructor(private readonly tutorsService: TutorsService) { }
 
   @ApiDocCreateTutor(CreateTutorDto)
   @Post()
@@ -41,4 +44,6 @@ export class TutorsController {
   remove(@Param('id') id: string) {
     return this.tutorsService.remove(+id);
   }
+
+
 }

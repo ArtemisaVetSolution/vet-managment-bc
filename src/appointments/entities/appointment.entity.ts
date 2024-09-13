@@ -1,10 +1,12 @@
 import { AppointmentState } from "src/common/enums/appointment-state.enum";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Patient } from "src/patients/entities/patient.entity";
+
 import { Service } from "src/services/entities/service.entity";
 import { Collaborator } from "src/collaborators/entities/collaborator.entity";
+import { Patient } from "src/patients/entities/patient.entity";
+import { AuditableEntity } from "src/common/entities/auditable.entity";
 @Entity('appointments')
-export class Appointment {
+export class Appointment extends AuditableEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
@@ -39,27 +41,4 @@ export class Appointment {
     @ManyToOne(() => Collaborator, (collaborator) => collaborator.appointments)
     @JoinColumn({ name: 'collaborator_id' })
     collaborator: Collaborator;
-
-    @CreateDateColumn({
-        name: 'created_at',
-        type: 'timestamptz',
-        default: () => `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-        select: false,
-    })
-    createdAt: Date;
-
-    @UpdateDateColumn({
-        name: 'updated_at',
-        type: 'timestamptz',
-        onUpdate: `CURRENT_TIMESTAMP AT TIME ZONE 'GMT-5'`,
-        select: false,
-    })
-    updatedAt: Date; 
-
-    @DeleteDateColumn({
-        name: 'deleted_at',
-        type: 'timestamptz',
-        select: false,
-    })
-    deletedAt: Date;
 }
