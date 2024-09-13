@@ -94,6 +94,26 @@ export function ApiNotFound<T>() {
     )
 }
 
+export function ApiUpdate<T>(entity: Type<T>) {
+  return applyDecorators(
+    ApiExtraModels(ApiSuccessResponseDto),
+    ApiOkResponse({
+      status: HttpStatus.ACCEPTED,
+      description: 'Update Successful',
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(ApiSuccessResponseDto) },
+          {
+            properties: {
+              data: { $ref: getSchemaPath(entity) },
+            },
+          },
+        ],
+      },
+    })
+  );
+}
+
 export function ApiUnauthorized<T>() {
     return applyDecorators(
         ApiExtraModels(ApiUnauthorizedResponseDto),
