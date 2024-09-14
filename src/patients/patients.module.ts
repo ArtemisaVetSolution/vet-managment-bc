@@ -10,5 +10,6 @@ import { Tutor } from 'src/tutors/entities/tutor.entity';
   imports: [TypeOrmModule.forFeature([Patient, Tutor])],
   controllers: [PatientsController],
   providers: [PatientsService],
+  exports: [PatientsService],
 })
 export class PatientsModule {}

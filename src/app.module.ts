@@ -20,6 +20,7 @@ import { ShiftSeeder } from './common/seeds/shifts.seed';
 import { Service } from './services/entities/service.entity';
 import { Shift } from './shifts/entities/shift.entity';
 import { TestsResultsModule } from './tests-results/tests-results.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { TestsResultsModule } from './tests-results/tests-results.module';
     TutorsModule,
     AppointmentsModule,
     HttpModule,
-    TestsResultsModule
+    TestsResultsModule,
+    // PaymentsModule
   ],
   providers: [
     LoggerService,
