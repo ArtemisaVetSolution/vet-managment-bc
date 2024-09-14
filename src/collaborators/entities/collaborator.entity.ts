@@ -10,6 +10,9 @@ export class Collaborator extends AuditableEntity{
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({default: 'Pepito'})
+  name: string;
+
   @ManyToOne(() => Shift , shift => shift.collaborators)
   @JoinColumn({ name: 'shift_id' })
   shift: Shift;
