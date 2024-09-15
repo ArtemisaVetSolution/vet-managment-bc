@@ -13,7 +13,7 @@ import { CommonModule } from 'src/common/common.module';
 @Module({
   controllers: [CollaboratorsController],
   providers: [CollaboratorsService, ServicesService, ShiftsService],
-  imports: [TypeOrmModule.forFeature([Collaborator]), TypeOrmModule.forFeature([Service]), TypeOrmModule.forFeature([Shift]),
-  CommonModule],
+  imports: [TypeOrmModule.forFeature([Collaborator, Service, Shift])
+  , CommonModule],
 })
 export class CollaboratorsModule {}

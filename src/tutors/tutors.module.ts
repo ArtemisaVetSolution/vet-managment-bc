@@ -11,6 +11,7 @@ import { CommonModule } from 'src/common/common.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Tutor]), CommonModule],
   controllers: [TutorsController],
+  exports: [TutorsService],
   providers: [TutorsService],
 })
 export class TutorsModule {}
