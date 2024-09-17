@@ -65,6 +65,24 @@ export function ApiDocGetOneResult<T> (entity: Type<T>) {
     )
 }
 
+export function ApiDocGetResultFile<T> (entity: Type<T>) {
+    return applyDecorators ( 
+        ApiOperation ({
+            summary: 'Retrieve the file of result by its ID',
+            description: 'Opens the file of the result by its ID'
+        }),
+        ApiParam({
+            name: 'id',
+            required: true,
+            type: Number,
+            description: 'Result ID'
+        }),
+        ApiSuccessResponses(entity),
+        ApiNotFound(),
+        ApiBadRequest()
+    )
+}
+
 export function ApiDocUpdateResult<T>(entity: Type<T>) {
     return applyDecorators(
         ApiOperation({
