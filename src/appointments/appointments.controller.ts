@@ -18,12 +18,13 @@ import { Leave, Path } from 'src/common/enums';
 @ApiTags('Appointments')
 @ApiExtraModels(AppointmentResponseDto, AvailabilityResponse)
 @PathName(Path.APPOINTMENTS)
-@Controller('appointments')
 @CatchErrors()
+@Controller('appointments')
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) { }
 
   @ApiDocGetAvailableHours(AvailabilityResponse)
+  @VerifyAuthService(Leave.CAN_READ_OWN)
   @Get('available')
   getAvailableTime(@Query() query: AvailableAppointmentsDto) {
     return this.appointmentsService.getAvailableAppointments(query);
@@ -39,18 +40,21 @@ export class AppointmentsController {
   }
 
   @ApiDocGetAppointments(AppointmentResponseDto)
+  @VerifyAuthService(Leave.CAN_READ)
   @Get()
   findAll(@Query() query: AppointmentsQueryDto) {
     return this.appointmentsService.findAllOrFilter(query);
   }
 
   @ApiDocGetOneAppointment(AppointmentResponseDto)
+  @VerifyAuthService(Leave.CAN_READ_OWN)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.appointmentsService.findOne(+id);
   }
 
   @ApiDocUpdateAppointment(AppointmentResponseDto)
+  @VerifyAuthService(Leave.CAN_UPDATE)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
     return this.appointmentsService.update(+id, updateAppointmentDto);

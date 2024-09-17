@@ -30,7 +30,7 @@ export class PaymentsController {
 
   @Get(':tutorId')
   @ApiDocGetPaymentsByTutor(CreatePaymentDto)
-  @VerifyAuthService(Leave.CAN_READ)
+  @VerifyAuthService(Leave.CAN_READ_OWN)
   findByTutor( @Param('tutorId') tutorId: string) {
     return this.paymentsService.findOneByTutor(+tutorId);
   }

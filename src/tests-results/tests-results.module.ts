@@ -10,9 +10,10 @@ import { Patient } from 'src/patients/entities/patient.entity';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
 import { Service } from 'src/services/entities/service.entity';
 import { TestResult } from './entities/test-result.entity';
+import { CommonModule } from 'src/common/common.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TestResult, Patient, Tutor, Service]), PatientsModule, ServicesModule],
+  imports: [TypeOrmModule.forFeature([TestResult, Patient, Tutor, Service]), PatientsModule, ServicesModule, CommonModule],
   controllers: [TestsResultsController],
   providers: [TestsResultsService, PatientsService, ServicesService],
 })

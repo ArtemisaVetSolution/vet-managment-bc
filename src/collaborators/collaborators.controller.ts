@@ -34,7 +34,7 @@ export class CollaboratorsController {
   }
 
   @ApiDocGetOneCollaborator(CreatedCollaboratorResponseDto)
-  @VerifyAuthService(Leave.CAN_READ)
+  @VerifyAuthService(Leave.CAN_READ_OWN)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.collaboratorsService.findOne(+id);

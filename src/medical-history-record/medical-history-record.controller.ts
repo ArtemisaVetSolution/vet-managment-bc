@@ -7,8 +7,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { MedicalHistoryQueryDto } from './dto/medical-history-record-query.dto';
 import { ApiDocCreateRecord, ApiDocFilterRecords, ApiDocGetFile, ApiDocGetOneRecord } from './decorators/medical-history.decorators';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
+import { PathName, VerifyAuthService } from 'src/common/decorators/auth.decorator';
+import { Leave, Path } from 'src/common/enums';
 
 @ApiTags('Medical History')
+@PathName(Path.MEDICAL_HISTORY_RECORD)
 @Controller('medical-history-record')
 @CatchErrors()
 export class MedicalHistoryRecordController {
@@ -16,12 +19,14 @@ export class MedicalHistoryRecordController {
   ) { }
 
   @ApiDocCreateRecord(CreateMedicalHistoryRecordDto)
+  @VerifyAuthService(Leave.CAN_CREATE)
   @Post()
   create(@Body() createMedicalHistoryRecordDto: CreateMedicalHistoryRecordDto) {
     return this.medicalHistoryRecordService.create(createMedicalHistoryRecordDto);
   }
-
+  
   @ApiDocGetFile(CreateMedicalHistoryRecordDto)
+  @VerifyAuthService(Leave.CAN_READ_OWN)
   @Get('file/:id')
   async generatePdf(
     @Param('id') id: string,
@@ -41,12 +46,14 @@ export class MedicalHistoryRecordController {
   }
 
   @ApiDocFilterRecords(CreateMedicalHistoryRecordDto)
+  @VerifyAuthService(Leave.CAN_READ)
   @Get()
   findAll(@Query() query: MedicalHistoryQueryDto) {
     return this.medicalHistoryRecordService.findAll(query);
   }
-
+  
   @ApiDocGetOneRecord(CreateMedicalHistoryRecordDto)
+  @VerifyAuthService(Leave.CAN_READ_OWN)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.medicalHistoryRecordService.findOne(id);
