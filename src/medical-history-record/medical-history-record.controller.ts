@@ -1,31 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query } from '@nestjs/common';
 import { MedicalHistoryRecordService } from './medical-history-record.service';
 import { CreateMedicalHistoryRecordDto } from './dto/create-medical-history-record.dto';
 import { UpdateMedicalHistoryRecordDto } from './dto/update-medical-history-record.dto';
 import { Response } from 'express';
-import { PdfGeneratorService } from 'src/pdf-generator/pdf-generator.service';
+import { ApiTags } from '@nestjs/swagger';
+import { MedicalHistoryQueryDto } from './dto/medical-history-record-query.dto';
+import { ApiDocCreateRecord, ApiDocFilterRecords, ApiDocGetFile, ApiDocGetOneRecord } from './decorators/medical-history.decorators';
 
+@ApiTags('Medical History')
 @Controller('medical-history-record')
 export class MedicalHistoryRecordController {
   constructor(private readonly medicalHistoryRecordService: MedicalHistoryRecordService
   ) { }
 
+  @ApiDocCreateRecord(CreateMedicalHistoryRecordDto)
   @Post()
   create(@Body() createMedicalHistoryRecordDto: CreateMedicalHistoryRecordDto) {
     return this.medicalHistoryRecordService.create(createMedicalHistoryRecordDto);
   }
 
-  // @Get('file/:id')
-  // async generatePdf(@Param('id') id: string, @Res() res: Response) {
-  //   const pdfBuffer = await this.medicalHistoryRecordService.generatePdf(id);
-  //   res.set({
-  //     'Content-Type': 'application/pdf',
-  //     'Content-Disposition': 'inline; filename="historia_clinica.pdf"',
-  //     'Content-Length': pdfBuffer.length,
-  //   });
-  //   res.end(pdfBuffer);
-  // }
-
+  @ApiDocGetFile(CreateMedicalHistoryRecordDto)
   @Get('file/:id')
   async generatePdf(
     @Param('id') id: string,
@@ -40,25 +34,19 @@ export class MedicalHistoryRecordController {
     )
     doc.pipe(res);
     doc.end();
+
+    return 'PDF generated succesfully';
   }
 
+  @ApiDocFilterRecords(CreateMedicalHistoryRecordDto)
   @Get()
-  findAll() {
-    return this.medicalHistoryRecordService.findAll();
+  findAll(@Query() query: MedicalHistoryQueryDto) {
+    return this.medicalHistoryRecordService.findAll(query);
   }
 
+  @ApiDocGetOneRecord(CreateMedicalHistoryRecordDto)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.medicalHistoryRecordService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMedicalHistoryRecordDto: UpdateMedicalHistoryRecordDto) {
-    return this.medicalHistoryRecordService.update(+id, updateMedicalHistoryRecordDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.medicalHistoryRecordService.remove(+id);
   }
 }

@@ -49,7 +49,7 @@ export const pdfRecordContent = (medicalHistoryRecord: MedicalHistoryRecord, pat
 
             {
                 margin: [15, 15],
-                layout: 'lightHorizontalLines',
+                // layout: 'lightHorizontalLines',
                 table: {
                     headerRows: 0,
                     widths: ['*', '*', '*'],

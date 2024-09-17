@@ -10,6 +10,7 @@ import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { pdfRecordContent } from './docs/pdf-content';
 import { PdfGeneratorService } from 'src/pdf-generator/pdf-generator.service';
 import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
+import { MedicalHistoryQueryDto } from './dto/medical-history-record-query.dto';
 
 @Injectable()
 export class MedicalHistoryRecordService {
@@ -54,8 +55,31 @@ export class MedicalHistoryRecordService {
     return this.pdfGeneratorService.generatePdf(docDefinition);
   }
 
-  findAll() {
-    return `This action returns all medicalHistoryRecord`;
+  @CatchErrors()
+  async findAll(queryDto: MedicalHistoryQueryDto) {
+    const query = this.medicalHistoryRepository.createQueryBuilder('record')
+    .leftJoinAndSelect('record.patient', 'patient')
+    .leftJoinAndSelect('record.appointment', 'appointment');
+
+    if(queryDto.patientId) {
+      const patient = await this.patientsRepository.findOne({ where: {id: queryDto.patientId}});
+      if (!patient) throw new NotFoundException('Patient not found');
+      query.andWhere('record.patient = :patient', { patient: patient.id});
+    }
+
+    if(queryDto.appointmentId) {
+      const appointment = await this.appointmentsRepository.findOne({ where: {id: queryDto.appointmentId}});
+      if (!appointment) throw new NotFoundException('Appointment not found');
+      query.andWhere('record.appointment = :appointment', { appointment: appointment.id});
+    }
+
+    console.log(queryDto)
+
+    const medicalRecords = await query.getMany();
+
+    if(!medicalRecords.length) throw new NotFoundException('No medical records were found');
+
+    return medicalRecords;
   }
 
   @CatchErrors()
@@ -63,13 +87,5 @@ export class MedicalHistoryRecordService {
     const medicalRecord = await this.medicalHistoryRepository.findOne({ where: { id }, relations });
     if(!medicalRecord) throw new NotFoundException('Medical record not found');
     return medicalRecord;
-  }
-
-  update(id: number, updateMedicalHistoryRecordDto: UpdateMedicalHistoryRecordDto) {
-    return `This action updates a #${id} medicalHistoryRecord`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} medicalHistoryRecord`;
   }
 }
