@@ -20,6 +20,9 @@ import { ShiftSeeder } from './common/seeds/shifts.seed';
 import { Service } from './services/entities/service.entity';
 import { Shift } from './shifts/entities/shift.entity';
 import { TestsResultsModule } from './tests-results/tests-results.module';
+import { PaymentsModule } from './payments/payments.module';
+import { MedicalHistoryRecordModule } from './medical-history-record/medical-history-record.module';
+import { PdfGeneratorModule } from './pdf-generator/pdf-generator.module';
 
 @Module({
   imports: [
@@ -32,17 +35,20 @@ import { TestsResultsModule } from './tests-results/tests-results.module';
       imports: [ConfigModule],
       useClass: DatabaseConfigService
     }),
-    InterceptorsModule,
-    CommonModule,
-    CollaboratorsModule,
-    ShiftsModule,
-    ServicesModule,
-    TypeOrmModule.forFeature([Shift, Service]),
-    PatientsModule,
-    TutorsModule,
     AppointmentsModule,
+    CollaboratorsModule,
+    CommonModule,
     HttpModule,
-    TestsResultsModule
+    InterceptorsModule,
+    MedicalHistoryRecordModule,
+    PatientsModule,
+    PaymentsModule,
+    PdfGeneratorModule,
+    ServicesModule,
+    ShiftsModule,
+    TestsResultsModule,
+    TutorsModule,
+    TypeOrmModule.forFeature([Shift, Service]),
   ],
   providers: [
     LoggerService,

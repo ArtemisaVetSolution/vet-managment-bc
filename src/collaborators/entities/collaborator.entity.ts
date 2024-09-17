@@ -17,7 +17,7 @@ export class Collaborator extends AuditableEntity{
   @Column({ name: 'user_id', type: 'uuid'})
   userId: string;
 
-  @Column({ name: 'name', type: 'varchar', length: 255, default: 'Nombre' })
+  @Column({ name: 'name', type: 'varchar', length: 255 })
   name: string;
 
   @ManyToMany(() => Service, service => service.collaborators)

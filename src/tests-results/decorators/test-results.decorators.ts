@@ -32,7 +32,7 @@ export function ApiDocGetResults<T>(entity: Type<T>) {
             description: 'The id of the patient to filter the results'
         }),
         ApiQuery({
-            name: 'sericeId',
+            name: 'serviceId',
             required: false,
             type: Number,
             description: 'The id of the service to filter the results'
@@ -62,6 +62,24 @@ export function ApiDocGetOneResult<T> (entity: Type<T>) {
         }),
         ApiSuccessResponses(entity),
         ApiNotFound()
+    )
+}
+
+export function ApiDocGetResultFile<T> (entity: Type<T>) {
+    return applyDecorators ( 
+        ApiOperation ({
+            summary: 'Retrieve the file of result by its ID',
+            description: 'Opens the file of the result by its ID'
+        }),
+        ApiParam({
+            name: 'id',
+            required: true,
+            type: Number,
+            description: 'Result ID'
+        }),
+        ApiSuccessResponses(entity),
+        ApiNotFound(),
+        ApiBadRequest()
     )
 }
 

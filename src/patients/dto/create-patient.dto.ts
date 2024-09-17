@@ -40,6 +40,10 @@ export class CreatePatientDto {
     @IsString()
     alimentation: string;
 
+    @ApiPropertyOptional({description: 'Color of the patient', example: 'Blanco', type: String})
+    @IsString()
+    color: string;
+
     @ApiProperty({ description: 'Tutor id', example: 1, type: Number })
     @IsNumber()
     tutorId: number;

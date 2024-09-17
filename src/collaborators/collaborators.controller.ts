@@ -20,6 +20,7 @@ export class CollaboratorsController {
   constructor(private readonly collaboratorsService: CollaboratorsService) {}
 
   @ApiDocCreateCollaborator(CreatedCollaboratorResponseDto)
+  @VerifyAuthService(Leave.CAN_CREATE)
   @Post()
   create(@Body() createCollaboratorDto: CreateCollaboratorDto) {
     return this.collaboratorsService.create(createCollaboratorDto);
@@ -33,24 +34,28 @@ export class CollaboratorsController {
   }
 
   @ApiDocGetOneCollaborator(CreatedCollaboratorResponseDto)
+  @VerifyAuthService(Leave.CAN_READ)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.collaboratorsService.findOne(+id);
   }
 
   @ApiDocUpdateCollaborator(CreatedCollaboratorResponseDto)
+  @VerifyAuthService(Leave.CAN_UPDATE)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCollaboratorDto: UpdateCollaboratorDto) {
     return this.collaboratorsService.update(+id, updateCollaboratorDto);
   }
 
   @ApiDocRestoreCollaborator(CreatedCollaboratorResponseDto)
+  @VerifyAuthService(Leave.CAN_UPDATE)
   @Patch(':id/restore')
   restore(@Param('id') id: string) {
     return this.collaboratorsService.restoreCollaborator(+id);
   }
 
   @ApiDocDeleteCollaborator(CreatedCollaboratorResponseDto)
+  @VerifyAuthService(Leave.CAN_DELETE)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.collaboratorsService.remove(+id);
