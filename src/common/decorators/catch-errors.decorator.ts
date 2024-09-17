@@ -35,11 +35,10 @@ export function CatchErrors() {
             throw httpException;
           }
         };
-        metadata.forEach(({ key, value }) => {
-          Reflect.defineMetadata(key, value, descriptor.value);
+        Reflect.getMetadataKeys(originalMethod).forEach((key) => {
+          const metadata = Reflect.getMetadata(key, originalMethod);
+          Reflect.defineMetadata(key, metadata, descriptor.value);
         });
-
-        Object.defineProperty(constructor.prototype, name, descriptor);
       }
     }
   };
