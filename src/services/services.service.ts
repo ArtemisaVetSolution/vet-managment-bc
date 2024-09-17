@@ -7,18 +7,19 @@ import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { Repository } from 'typeorm';
 
 @Injectable()
+@CatchErrors()
 export class ServicesService {
   constructor(
     @InjectRepository(Service) private readonly serviceRepository: Repository<Service>
   ) {}
 
-  @CatchErrors()
+  
   async create(createServiceDto: CreateServiceDto) {
     const newService = this.serviceRepository.create(createServiceDto);
     return this.serviceRepository.save(newService);
   }
 
-  @CatchErrors()
+  
   findAll() {
     const services = this.serviceRepository.find();
     if (!services) {
@@ -27,7 +28,7 @@ export class ServicesService {
     return services;
   }
 
-  @CatchErrors()
+  
   async findOne(id: number) {
     const service = await this.serviceRepository.findOne({where:{id}});
     if (!service) {
@@ -36,12 +37,12 @@ export class ServicesService {
     return service;
   }
 
-  @CatchErrors()
+  
   update(id: number, updateServiceDto: UpdateServiceDto) {
     return `This action updates a #${id} service`;
   }
 
-  @CatchErrors()
+  
   remove(id: number) {
     return `This action removes a #${id} service`;
   }

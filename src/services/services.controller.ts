@@ -5,10 +5,12 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ApiDocCreateService, ApiDocDeleteService, ApiDocGetOneService, ApiDocGetServices, ApiDocUpdateService } from './decorators/services.decorators';
 import { CreatedServiceResponseDto, ServiceDto } from './dto/response-create-service';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Services')
 @ApiExtraModels(CreatedServiceResponseDto)
 @Controller('services')
+@CatchErrors()
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 

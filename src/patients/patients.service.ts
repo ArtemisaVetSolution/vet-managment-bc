@@ -10,13 +10,13 @@ import { PatientQueryDto } from './dto/patient-query.dto';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
 
 @Injectable()
+@CatchErrors()
 export class PatientsService {
   constructor(
     @InjectRepository(Patient) private patientsRepository: Repository<Patient>,
     @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>
   ) { }
 
-  @CatchErrors()
   async create(createPatientDto: CreatePatientDto) {
 
     const tutor: Tutor = await this.tutorsRepository.findOneBy({ id: createPatientDto.tutorId});
@@ -29,7 +29,6 @@ export class PatientsService {
 
   }
 
-  @CatchErrors()
   async findWithQueryParams(patientQuery: PatientQueryDto) {
 
     const query = this.patientsRepository.createQueryBuilder('patient')
@@ -51,7 +50,6 @@ export class PatientsService {
     return patients;
   }
 
-  @CatchErrors()
   async findOne(id: number) {
     const patient: Patient = await this.patientsRepository.findOne({ where: { id } });
 
@@ -60,7 +58,6 @@ export class PatientsService {
     return patient;
   }
 
-  @CatchErrors()
   async update(id: number, updatePatientDto: UpdatePatientDto) {
     const result = await this.patientsRepository.update(id, updatePatientDto);
 
@@ -69,7 +66,6 @@ export class PatientsService {
     return await this.patientsRepository.findOne({ where: { id } });
   }
 
-  @CatchErrors()
   async remove(id: number) {
 
     const patient: Patient = await this.findOne(id);

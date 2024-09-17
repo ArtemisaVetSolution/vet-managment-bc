@@ -13,6 +13,7 @@ import { join } from 'path';
 import { createReadStream, existsSync } from 'fs';
 
 @Injectable()
+@CatchErrors()
 export class TestsResultsService {
   constructor(
     @InjectRepository(TestResult) private testsResultsRepository: Repository<TestResult>,
@@ -20,7 +21,6 @@ export class TestsResultsService {
     private servicesService: ServicesService
   ) { }
 
-  @CatchErrors()
   async create(createTestResultDto: CreateTestResultDto) {
     const patient = await this.patientsService.findOne(createTestResultDto.patientId);
     const service = await this.servicesService.findOne(createTestResultDto.serviceId);
@@ -37,7 +37,6 @@ export class TestsResultsService {
     return await this.testsResultsRepository.save(newResult);
   }
 
-  @CatchErrors()
   async findAllOrFilter(queryDto: TestResultQueryDto) {
 
     const query = this.testsResultsRepository.createQueryBuilder('test')
@@ -61,7 +60,6 @@ export class TestsResultsService {
     return await query.getMany();
   }
 
-  @CatchErrors()
   async findOne(id: number) {
     const result = await this.testsResultsRepository.findOne({ where: { id }, relations: ['service', 'patient']});
 
@@ -70,7 +68,6 @@ export class TestsResultsService {
     return result;
   }
 
-  @CatchErrors()
   async update(id: number, updateTestResultDto: UpdateTestResultDto) {
     const result = await this.testsResultsRepository.update(id, updateTestResultDto);
 
@@ -79,7 +76,6 @@ export class TestsResultsService {
     return await this.testsResultsRepository.findOne({ where: { id } });
   }
 
-  @CatchErrors()
   async downloadFile(id: number, res: Response) {
     const result = await this.findOne(id);
     const path = join(process.cwd(), result.filePath

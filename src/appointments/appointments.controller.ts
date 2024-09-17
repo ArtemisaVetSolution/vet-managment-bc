@@ -8,10 +8,12 @@ import { AppointmentResponseDto } from './dto/appointment-response.dto';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { AvailableAppointmentsDto } from './dto/available-appointments-query.dto';
 import { AvailabilityResponse } from './dto/availability-response.dto';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Appointments')
 @ApiExtraModels(AppointmentResponseDto, AvailabilityResponse)
 @Controller('appointments')
+@CatchErrors()
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) { }
 
