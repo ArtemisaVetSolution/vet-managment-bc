@@ -5,6 +5,7 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ApiDocCreateService, ApiDocDeleteService, ApiDocGetOneService, ApiDocGetServices, ApiDocUpdateService } from './decorators/services.decorators';
 import { CreatedServiceResponseDto, ServiceDto } from './dto/response-create-service';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { PathName, VerifyAuthService } from 'src/common/decorators/auth.decorator';
 import { Leave, Path } from 'src/common/enums';
 
@@ -12,6 +13,7 @@ import { Leave, Path } from 'src/common/enums';
 @ApiExtraModels(CreatedServiceResponseDto)
 @PathName(Path.SERVICES)
 @Controller('services')
+@CatchErrors()
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 

@@ -16,6 +16,7 @@ import { IConfirmationAppoitmentService } from 'src/mail-sender/interfaces/confi
 
 
 @Injectable()
+@CatchErrors()
 export class AppointmentsService {
   constructor(
     @InjectRepository(Appointment) private appointmentsRepository: Repository<Appointment>,
@@ -26,10 +27,7 @@ export class AppointmentsService {
     private readonly confirmationAppoitmentService: IConfirmationAppoitmentService,
   ) { }
 
-  @CatchErrors()
   async create(createAppointmentDto: CreateAppointmentDto, email: string) {
-
-    //Falta verificar que la cita esté dentro del shift del colaborador
 
     const collaborator = await this.collaboratorsRepository.findOne({ where: { id: createAppointmentDto.collaboratorId }, relations: ['shift']} );
 
@@ -70,7 +68,7 @@ export class AppointmentsService {
     return await this.appointmentsRepository.save(newAppointment);
   }
 
-  @CatchErrors()
+  
   async findAllOrFilter(appointmentQuery: AppointmentsQueryDto) {
     const query = this.appointmentsRepository.createQueryBuilder('appointment')
     .leftJoinAndSelect('appointment.patient', 'patient')
@@ -97,14 +95,14 @@ export class AppointmentsService {
     return await query.getMany();
   }
 
-  @CatchErrors()
+  
   async findOne(id: number) {
     const appointment = await this.appointmentsRepository.findOne({ where: { id }, relations: ['service']});
     if (!appointment) throw new NotFoundException('Appointment not found');
     return appointment;
   }
 
-  @CatchErrors()
+  
   async update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
     const result = await this.appointmentsRepository.update(id, updateAppointmentDto);
 
@@ -113,7 +111,7 @@ export class AppointmentsService {
     return await this.appointmentsRepository.findOne({ where: { id }, relations: ['service'] });
   }
 
-  @CatchErrors()
+  
   async getAvailableAppointments(availableAppointmentsDto: AvailableAppointmentsDto) {
     const collaborator = await this.collaboratorsRepository.findOne({ where: { id: availableAppointmentsDto.collaboratorId }, relations: ['shift']} );
 
@@ -130,7 +128,7 @@ export class AppointmentsService {
     return { availableHours };
   }
 
-  @CatchErrors()
+  
   async getHoursInRange(startTime: string, endTime: string) {
     const start = parse(startTime, 'HH:mm', new Date());
     const end = subHours(parse(endTime, 'HH:mm', new Date()), 1);

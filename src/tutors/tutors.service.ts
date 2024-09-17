@@ -10,13 +10,14 @@ import { userPath } from 'src/common/docs/users-service-path';
 import { IHttpAdapter } from 'src/common/interfaces';
 
 @Injectable()
+@CatchErrors()
 export class TutorsService {
   constructor(
     @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>,
     @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter 
   ) { }
 
-  @CatchErrors()
+  
   async create(createTutorDto: CreateTutorDto) {
     const newUser = await this.httpAdapter.post<{ data: string }>(userPath + '/auth/register', {
       email: createTutorDto.email,
@@ -31,7 +32,6 @@ export class TutorsService {
     return await this.tutorsRepository.save(newTutor);
   }
 
-  @CatchErrors()
   async findAll() {
     const tutors = await this.tutorsRepository.find();
 
@@ -40,7 +40,6 @@ export class TutorsService {
     return tutors;
   }
 
-  @CatchErrors()
   async findOne(id: number) {
     const tutor = await this.tutorsRepository.findOne({ where: { id }, relations: ['patients'] });
 
@@ -49,7 +48,6 @@ export class TutorsService {
     return tutor;
   }
 
-  @CatchErrors()
   async update(id: number, updateTutorDto: UpdateTutorDto) {
 
     //Falta update en users
@@ -60,7 +58,6 @@ export class TutorsService {
     return await this.findOne(id);
   }
 
-  @CatchErrors()
   async remove(id: number) {
     const tutor = await this.findOne(id);
 

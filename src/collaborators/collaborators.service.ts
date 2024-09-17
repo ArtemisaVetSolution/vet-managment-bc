@@ -12,6 +12,7 @@ import { CollaboratorQueryDto } from './dto/collaborator-query.dto';
 import { IHttpAdapter } from 'src/common/interfaces';
 
 @Injectable()
+@CatchErrors()
 export class CollaboratorsService {
 
   constructor(
@@ -20,8 +21,6 @@ export class CollaboratorsService {
     @InjectRepository(Collaborator) private collaboratorRepository: Repository<Collaborator>,
     @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter
   ) {} 
-
-  @CatchErrors()
   async create(createCollaboratorDto: CreateCollaboratorDto) {
     const newUser = await this.httpAdapter.post<{ data: string }>( userPath + '/auth/register', {
       email: createCollaboratorDto.email,
@@ -59,7 +58,6 @@ export class CollaboratorsService {
   }
 
  
-  @CatchErrors()
   async findWithQueryParams(collaboratorQuery: CollaboratorQueryDto) {
     const query = this.collaboratorRepository.createQueryBuilder('collaborator')
       .leftJoinAndSelect('collaborator.shift', 'shift')
@@ -81,7 +79,6 @@ export class CollaboratorsService {
   }
 
 
-  @CatchErrors()
   async findOne(id: number) {
     const collaborator = this.collaboratorRepository.findOne({where:{id}, relations: ['shift', 'services']});
     if (!collaborator) {
@@ -90,7 +87,6 @@ export class CollaboratorsService {
     return collaborator;
   }
 
-  @CatchErrors()
   async findAllByShift(shiftName: string) {
     const shift = await this.shiftService.findOneByName(shiftName);
     if (!shift) {
@@ -103,7 +99,6 @@ export class CollaboratorsService {
     return collaborators;
   }
 
-  @CatchErrors()
   async restoreCollaborator(id: number): Promise<void> {
     const result = await this.collaboratorRepository.restore(id);
     if (!result.affected) {
@@ -112,7 +107,6 @@ export class CollaboratorsService {
     return;
   }
 
-  @CatchErrors()
   async findAllByService(serviceId: number) {
     const service = await this.serviceService.findOne(serviceId);
     if (!service) {
@@ -128,7 +122,6 @@ export class CollaboratorsService {
     return collaborators;
   }
 
-  @CatchErrors()
   async update(id: number, updateCollaboratorDto: UpdateCollaboratorDto) {
     const collaborator = await this.collaboratorRepository.findOne({where:{id}});
     if (!collaborator) {
@@ -156,7 +149,6 @@ export class CollaboratorsService {
     return this.collaboratorRepository.save(collaborator);
   }
 
-  @CatchErrors()
   async remove(id: number) {
     const collaborator = await this.collaboratorRepository.findOne({where:{id}});
     if (!collaborator) {

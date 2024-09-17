@@ -8,6 +8,7 @@ import { AppointmentResponseDto } from './dto/appointment-response.dto';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { AvailableAppointmentsDto } from './dto/available-appointments-query.dto';
 import { AvailabilityResponse } from './dto/availability-response.dto';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { User } from 'src/common/decorators/user-payload-param.decorator';
 import { JwtPayload } from '../common/interfaces/index';
 import { PathName, VerifyAuthService } from 'src/common/decorators/auth.decorator';
@@ -18,6 +19,7 @@ import { Leave, Path } from 'src/common/enums';
 @ApiExtraModels(AppointmentResponseDto, AvailabilityResponse)
 @PathName(Path.APPOINTMENTS)
 @Controller('appointments')
+@CatchErrors()
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) { }
 

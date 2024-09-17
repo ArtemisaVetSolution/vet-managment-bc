@@ -8,12 +8,14 @@ import { CreatedCollaboratorResponseDto } from './dto/response-create-collaborat
 import { CollaboratorQueryDto } from './dto/collaborator-query.dto';
 import { Leave, Path } from 'src/common/enums';
 import { PathName, VerifyAuthService } from 'src/common/decorators/auth.decorator';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 
 @ApiTags('Collaborators')
 @ApiExtraModels(CreatedCollaboratorResponseDto)
 @PathName(Path.COLLABORATOR)
 @Controller('collaborators')
+@CatchErrors()
 export class CollaboratorsController {
   constructor(private readonly collaboratorsService: CollaboratorsService) {}
 

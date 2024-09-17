@@ -6,9 +6,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiDocCreatePatient, ApiDocDeletePatient, ApiDocGetOnePatient, ApiDocGetPatients, ApiDocUpdatePatient } from './decorators/patients.decorators';
 import { Patient } from './entities/patient.entity';
 import { PatientQueryDto } from './dto/patient-query.dto';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Patients')
 @Controller('patients')
+@CatchErrors()
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 

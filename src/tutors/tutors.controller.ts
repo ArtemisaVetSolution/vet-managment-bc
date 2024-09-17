@@ -8,10 +8,12 @@ import { TutorResponseDto } from './dto/tutor-response.dto';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { Response } from 'express';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Tutors')
 @ApiExtraModels(TutorResponseDto)
 @Controller('tutors')
+@CatchErrors()
 export class TutorsController {
   constructor(private readonly tutorsService: TutorsService) { }
 

@@ -9,9 +9,11 @@ import { UploadPath } from 'src/common/enums/upload-path.enum';
 import { fileNameHelper } from './helpers/file-name.helper';
 import { ApiDocCreateResult, ApiDocGetOneResult, ApiDocGetResultFile, ApiDocGetResults } from './decorators/test-results.decorators';
 import { Response } from 'express';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Tests Results')
 @Controller('tests-results')
+@CatchErrors()
 export class TestsResultsController {
   constructor(private readonly testsResultsService: TestsResultsService) { }
 

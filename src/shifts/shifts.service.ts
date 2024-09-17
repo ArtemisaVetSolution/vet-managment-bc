@@ -4,8 +4,10 @@ import { UpdateShiftDto } from './dto/update-shift.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Shift } from './entities/shift.entity';
 import { Repository } from 'typeorm';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @Injectable()
+@CatchErrors()
 export class ShiftsService {
 
   constructor(
