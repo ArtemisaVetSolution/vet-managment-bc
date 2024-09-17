@@ -53,7 +53,7 @@ export class PatientsService {
 
   @CatchErrors()
   async findOne(id: number) {
-    const patient: Patient = await this.patientsRepository.findOne({ where: { id } });
+    const patient: Patient = await this.patientsRepository.findOne({ where: { id }, relations: ['tutor'] });
 
     if (!patient) throw new NotFoundException('Patient was not found');
 

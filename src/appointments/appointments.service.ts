@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
@@ -12,6 +12,8 @@ import { AvailableAppointmentsDto } from './dto/available-appointments-query.dto
 import { addHours, format, parse, subHours } from 'date-fns';
 import { Service } from 'src/services/entities/service.entity';
 import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
+import { IConfirmationAppoitmentService } from 'src/mail-sender/interfaces/confirmation-appoitment-service.interface';
+
 
 @Injectable()
 export class AppointmentsService {
@@ -19,15 +21,20 @@ export class AppointmentsService {
     @InjectRepository(Appointment) private appointmentsRepository: Repository<Appointment>,
     @InjectRepository(Service) private servicesRepository: Repository<Service>,
     @InjectRepository(Collaborator) private collaboratorsRepository: Repository<Collaborator>,
-    private patientsService: PatientsService
+    private patientsService: PatientsService,
+    @Inject('IConfirmationAppoitmentService')
+    private readonly confirmationAppoitmentService: IConfirmationAppoitmentService,
   ) { }
 
   @CatchErrors()
-  async create(createAppointmentDto: CreateAppointmentDto) {
+  async create(createAppointmentDto: CreateAppointmentDto, email: string) {
 
     //Falta verificar que la cita esté dentro del shift del colaborador
 
     const collaborator = await this.collaboratorsRepository.findOne({ where: { id: createAppointmentDto.collaboratorId }, relations: ['shift']} );
+
+    if(!collaborator)
+        throw new NotFoundException('Collaborator not found');
 
     const collaboratorShift = await this.getHoursInRange(collaborator.shift.startTime, collaborator.shift.endTime);
 
@@ -52,6 +59,13 @@ export class AppointmentsService {
       collaborator,
       patient
     })
+    console.log(newAppointment);
+    
+    const formattedDate = newAppointment.date.toISOString().split('T')[0];
+
+    const sendEmail = await this.confirmationAppoitmentService.sendConfirmationEmail(email, patient.tutor.name, formattedDate, newAppointment.time, collaborator.name, patient.name, service.name)
+    console.log(sendEmail);
+    
 
     return await this.appointmentsRepository.save(newAppointment);
   }
