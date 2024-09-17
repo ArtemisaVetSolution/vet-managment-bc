@@ -2,6 +2,7 @@ import { Appointment } from "src/appointments/entities/appointment.entity";
 import { AuditableEntity } from "src/common/entities/auditable.entity";
 import { Gender } from "src/common/enums/gender.enum";
 import { Species } from "src/common/enums/species.enum";
+import { MedicalHistoryRecord } from "src/medical-history-record/entities/medical-history-record.entity";
 import { TestResult } from "src/tests-results/entities/test-result.entity";
 import { Tutor } from "src/tutors/entities/tutor.entity";
 
@@ -44,6 +45,12 @@ export class Patient extends AuditableEntity {
     @Column()
     alimentation: string;
 
+    @Column({ nullable: true})
+    sterilized: boolean;
+
+    @Column({ nullable: true})
+    color: string;
+
     @ManyToOne(() => Tutor, (tutor) => tutor.patients)
     @JoinColumn({ name: 'tutor_id' })
     tutor: Tutor;
@@ -53,5 +60,8 @@ export class Patient extends AuditableEntity {
 
     @OneToMany(() => TestResult, (testResult) => testResult.patient)
     testsResults: TestResult[];
+
+    @OneToMany(() => MedicalHistoryRecord, (medicalHistoryRecord) => medicalHistoryRecord.patient)
+    medicalHistoryRecords: MedicalHistoryRecord[];
 
 }

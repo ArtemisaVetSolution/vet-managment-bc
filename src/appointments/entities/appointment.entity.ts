@@ -6,6 +6,7 @@ import { Collaborator } from "src/collaborators/entities/collaborator.entity";
 import { Patient } from "src/patients/entities/patient.entity";
 import { AuditableEntity } from "src/common/entities/auditable.entity";
 import { Payment } from "src/payments/entities/payment.entity";
+import { MedicalHistoryRecord } from "src/medical-history-record/entities/medical-history-record.entity";
 @Entity('appointments')
 export class Appointment extends AuditableEntity {
     @PrimaryGeneratedColumn('increment')
@@ -42,6 +43,9 @@ export class Appointment extends AuditableEntity {
     @ManyToOne(() => Collaborator, (collaborator) => collaborator.appointments)
     @JoinColumn({ name: 'collaborator_id' })
     collaborator: Collaborator;
+
+    @OneToOne(() => MedicalHistoryRecord, (medicalHistoryRecord) => medicalHistoryRecord.appointment)
+    medicalHistoryRecord: MedicalHistoryRecord
 
     @OneToOne(() => Payment, (payment) => payment.appointment)
     payment: Payment;
