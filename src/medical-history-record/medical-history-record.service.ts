@@ -12,7 +12,9 @@ import { PdfGeneratorService } from 'src/pdf-generator/pdf-generator.service';
 import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
 import { MedicalHistoryQueryDto } from './dto/medical-history-record-query.dto';
 
+
 @Injectable()
+@CatchErrors()
 export class MedicalHistoryRecordService {
   constructor(
     @InjectRepository(MedicalHistoryRecord) private medicalHistoryRepository: Repository<MedicalHistoryRecord>,
@@ -22,7 +24,7 @@ export class MedicalHistoryRecordService {
     private readonly pdfGeneratorService: PdfGeneratorService
   ) { }
 
-  @CatchErrors()
+
   async create(createMedicalHistoryRecordDto: CreateMedicalHistoryRecordDto) {
     const patient = await this.patientsRepository.findOne({ where: { id: createMedicalHistoryRecordDto.patientId } });
     const appointment = await this.appointmentsRepository.findOne({ where: { id: createMedicalHistoryRecordDto.appointmentId } });
@@ -45,7 +47,6 @@ export class MedicalHistoryRecordService {
     return await this.medicalHistoryRepository.save(newRecord);
   }
 
-  @CatchErrors()
   async generatePdf(id: string) {
     const medicalRecord = await this.findOne(id, ['patient', 'appointment.collaborator'])
     const patient = await this.patientsRepository.findOne({ where: { id: medicalRecord.patient.id } });
@@ -55,7 +56,6 @@ export class MedicalHistoryRecordService {
     return this.pdfGeneratorService.generatePdf(docDefinition);
   }
 
-  @CatchErrors()
   async findAll(queryDto: MedicalHistoryQueryDto) {
     const query = this.medicalHistoryRepository.createQueryBuilder('record')
     .leftJoinAndSelect('record.patient', 'patient')
@@ -82,7 +82,6 @@ export class MedicalHistoryRecordService {
     return medicalRecords;
   }
 
-  @CatchErrors()
   async findOne(id: string, relations?: string[]) {
     const medicalRecord = await this.medicalHistoryRepository.findOne({ where: { id }, relations });
     if(!medicalRecord) throw new NotFoundException('Medical record not found');

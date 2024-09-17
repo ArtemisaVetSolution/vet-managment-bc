@@ -6,9 +6,11 @@ import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { MedicalHistoryQueryDto } from './dto/medical-history-record-query.dto';
 import { ApiDocCreateRecord, ApiDocFilterRecords, ApiDocGetFile, ApiDocGetOneRecord } from './decorators/medical-history.decorators';
+import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Medical History')
 @Controller('medical-history-record')
+@CatchErrors()
 export class MedicalHistoryRecordController {
   constructor(private readonly medicalHistoryRecordService: MedicalHistoryRecordService
   ) { }

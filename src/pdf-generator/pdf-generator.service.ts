@@ -13,10 +13,11 @@ const fonts = {
 }
 
 @Injectable()
+@CatchErrors()
 export class PdfGeneratorService {
     private printer = new PdfPrinter(fonts);
 
-    @CatchErrors()
+
     async generatePdf(docDefinition: TDocumentDefinitions) {
         return this.printer.createPdfKitDocument(docDefinition)
     }

@@ -96,7 +96,7 @@ export const pdfRecordContent = (medicalHistoryRecord: MedicalHistoryRecord, pat
                         ],
                         [
                             {
-                                text: [{ text: 'Peso: ', bold: true }, patient.weight]
+                                text: [{ text: 'Peso: ', bold: true }, patient.weight, ' kg']
                             },
                             {
                                 text: [{ text: 'Esterilizado: ', bold: true }, patient.sterilized ? 'Si' : 'No']

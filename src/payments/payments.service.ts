@@ -10,6 +10,7 @@ import { Tutor } from 'src/tutors/entities/tutor.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
 
 @Injectable()
+@CatchErrors()
 export class PaymentsService {
 
   constructor(
@@ -19,7 +20,6 @@ export class PaymentsService {
     @InjectRepository(Patient) private patientRepository: Repository<Patient>
   ) {}
 
-  @CatchErrors()
   async create(createPaymentDto: CreatePaymentDto) {
     const appointment = await this.appointmentRepository.findOne({where: {id:createPaymentDto.appointmentId}});
     if (!appointment) {
@@ -33,7 +33,6 @@ export class PaymentsService {
     return this.paymentRepository.save(newPayment);
   }
 
-  @CatchErrors()
   async findAll() {
     const payments = await this.paymentRepository.find();
     if (!payments) {
@@ -42,7 +41,6 @@ export class PaymentsService {
     return payments;
   }
 
-  @CatchErrors()
   async findOneByTutor(tutorId: number) {
     const tutor = await this.tutorRepository.findOne({where: {id:tutorId}});
     if (!tutor) {
@@ -55,7 +53,6 @@ export class PaymentsService {
     return payments;
   }
 
-  @CatchErrors()
   async findOneByAppointment(appoimentId: number) {
     const appoiment = await this.appointmentRepository.findOne({where: {id:appoimentId}});
     const payment = await this.paymentRepository.findOne({ where: { appointment: appoiment } });
@@ -66,7 +63,7 @@ export class PaymentsService {
   }
 
 
-  @CatchErrors()
+
   async remove(id: number) {
     const payment = await this.paymentRepository.findOne({ where: { id } });
     if (!payment) {
