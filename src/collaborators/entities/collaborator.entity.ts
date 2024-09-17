@@ -20,7 +20,10 @@ export class Collaborator extends AuditableEntity{
   @Column({ name: 'user_id', type: 'uuid'})
   userId: string;
 
-  @ManyToMany(() => Service)
+  @Column({ name: 'name', type: 'varchar', length: 255, default: 'Nombre' })
+  name: string;
+
+  @ManyToMany(() => Service, service => service.collaborators)
   @JoinTable({name: 'collaborators_services'})
   services: Service[];
 

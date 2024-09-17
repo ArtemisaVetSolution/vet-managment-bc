@@ -13,7 +13,7 @@ import { IHttpAdapter } from 'src/common/interfaces';
 export class TutorsService {
   constructor(
     @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>,
-    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter
+    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter 
   ) { }
 
   @CatchErrors()

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,8 +7,9 @@ import { Repository } from 'typeorm';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { ServicesService } from 'src/services/services.service';
 import { ShiftsService } from 'src/shifts/shifts.service';
-import axios from 'axios';  // Importa axios correctamente
 import { userPath } from 'src/common/docs/users-service-path';
+import { CollaboratorQueryDto } from './dto/collaborator-query.dto';
+import { IHttpAdapter } from 'src/common/interfaces';
 
 @Injectable()
 export class CollaboratorsService {
@@ -16,19 +17,20 @@ export class CollaboratorsService {
   constructor(
     private readonly serviceService: ServicesService,
     private readonly shiftService: ShiftsService,
-    @InjectRepository(Collaborator) private collaboratorRepository: Repository<Collaborator>
+    @InjectRepository(Collaborator) private collaboratorRepository: Repository<Collaborator>,
+    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter
   ) {} 
 
   @CatchErrors()
   async create(createCollaboratorDto: CreateCollaboratorDto) {
-    const newUser = await axios.post( userPath + '/auth/register', {
+    const newUser = await this.httpAdapter.post<{ data: string }>( userPath + '/auth/register', {
       email: createCollaboratorDto.email,
       name: createCollaboratorDto.name,
       password: createCollaboratorDto.password,
       cellphone: createCollaboratorDto.cellphone,
       role: 'collaborator'
     });
-    const userId = newUser.data.data;
+    const userId = newUser.data;
     let servicesExists = true;
     const services = [];
     for (const serviceId of createCollaboratorDto.servicesId) {
@@ -50,6 +52,7 @@ export class CollaboratorsService {
       shift : shift,
       userId,
       services: services,
+      name: createCollaboratorDto.name
     });  
 
     return this.collaboratorRepository.save(newCollaborator);
@@ -57,16 +60,26 @@ export class CollaboratorsService {
 
  
   @CatchErrors()
-  async findAll() {
-    const collaborators = await this.collaboratorRepository.find({
-      relations: ['shift', 'services'],  
-      withDeleted: false,
-    });
-    if (!collaborators) {
+  async findWithQueryParams(collaboratorQuery: CollaboratorQueryDto) {
+    const query = this.collaboratorRepository.createQueryBuilder('collaborator')
+      .leftJoinAndSelect('collaborator.shift', 'shift')
+      .leftJoinAndSelect('collaborator.services', 'services');
+
+    if (collaboratorQuery.shift) {
+      const shift = await this.shiftService.findOneByName(collaboratorQuery.shift);
+      query.andWhere('collaborator.shift = :shift', { shift: shift.id });
+    }
+    if (collaboratorQuery.serviceId) {
+      const service = await this.serviceService.findOne(collaboratorQuery.serviceId);
+      query.andWhere('services.id = :serviceId', { serviceId: collaboratorQuery.serviceId });
+    }
+    const collaborators = await query.getMany();
+    if (!collaborators || collaborators.length === 0) {
       throw new NotFoundException('Collaborators not found');
     }
     return collaborators;
   }
+
 
   @CatchErrors()
   async findOne(id: number) {
