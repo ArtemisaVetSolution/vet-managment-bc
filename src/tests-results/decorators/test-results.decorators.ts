@@ -32,7 +32,7 @@ export function ApiDocGetResults<T>(entity: Type<T>) {
             description: 'The id of the patient to filter the results'
         }),
         ApiQuery({
-            name: 'sericeId',
+            name: 'serviceId',
             required: false,
             type: Number,
             description: 'The id of the service to filter the results'
