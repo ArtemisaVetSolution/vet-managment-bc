@@ -20,6 +20,8 @@ async function bootstrap() {
 
   setupGlobalConfig(app, logger);
 
+  app.enableCors();
+
   await app.listen(port);
 
   Logger.log(`Server running on port ${port}`, 'Bootstrap');

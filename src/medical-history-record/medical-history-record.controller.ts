@@ -26,7 +26,7 @@ export class MedicalHistoryRecordController {
   }
   
   @ApiDocGetFile(CreateMedicalHistoryRecordDto)
-  @VerifyAuthService(Leave.CAN_READ_OWN)
+  // @VerifyAuthService(Leave.CAN_READ_OWN)
   @Get('file/:id')
   async generatePdf(
     @Param('id') id: string,
