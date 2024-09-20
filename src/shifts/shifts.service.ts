@@ -1,17 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateShiftDto } from './dto/create-shift.dto';
 import { UpdateShiftDto } from './dto/update-shift.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Shift } from './entities/shift.entity';
 import { Repository } from 'typeorm';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Injectable()
 @CatchErrors()
 export class ShiftsService {
 
   constructor(
-    @InjectRepository(Shift) private readonly shiftRepository: Repository<Shift>
+    @InjectRepository(Shift) private readonly shiftRepository: Repository<Shift>,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
   ) {}
 
   create(createShiftDto: CreateShiftDto) {

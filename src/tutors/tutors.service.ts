@@ -8,13 +8,19 @@ import { Tutor } from './entities/tutor.entity';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { userPath } from 'src/common/docs/users-service-path';
 import { IHttpAdapter } from 'src/common/interfaces';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Injectable()
 @CatchErrors()
 export class TutorsService {
   constructor(
     @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>,
-    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter 
+    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService, 
   ) { }
 
   

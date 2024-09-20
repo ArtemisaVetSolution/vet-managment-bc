@@ -7,11 +7,13 @@ import { HttpModule } from '@nestjs/axios';
 import { IHttpAdapter } from 'src/common/interfaces';
 import { AxiosHttpAdapter } from 'src/common/http/axios-http-adapter';
 import { CommonModule } from 'src/common/common.module';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Tutor]), CommonModule],
   controllers: [TutorsController],
   exports: [TutorsService],
-  providers: [TutorsService],
+  providers: [TutorsService, LoggerService, ExceptionHandlerService],
 })
 export class TutorsModule {}

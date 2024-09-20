@@ -1,4 +1,4 @@
-import { Catch, Injectable, NotFoundException } from '@nestjs/common';
+import { Catch, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMedicalHistoryRecordDto } from './dto/create-medical-history-record.dto';
 import { UpdateMedicalHistoryRecordDto } from './dto/update-medical-history-record.dto';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
@@ -11,6 +11,8 @@ import { pdfRecordContent } from './docs/pdf-content';
 import { PdfGeneratorService } from 'src/pdf-generator/pdf-generator.service';
 import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
 import { MedicalHistoryQueryDto } from './dto/medical-history-record-query.dto';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 
 @Injectable()
@@ -21,6 +23,10 @@ export class MedicalHistoryRecordService {
     @InjectRepository(Patient) private patientsRepository: Repository<Patient>,
     @InjectRepository(Appointment) private appointmentsRepository: Repository<Appointment>,
     @InjectRepository(Collaborator) private collaboratorsRepository: Repository<Collaborator>,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
     private readonly pdfGeneratorService: PdfGeneratorService
   ) { }
 

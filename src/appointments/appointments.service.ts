@@ -13,6 +13,8 @@ import { addHours, format, parse, subHours } from 'date-fns';
 import { Service } from 'src/services/entities/service.entity';
 import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
 import { IConfirmationAppoitmentService } from 'src/mail-sender/interfaces/confirmation-appoitment-service.interface';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 
 @Injectable()
@@ -25,6 +27,10 @@ export class AppointmentsService {
     private patientsService: PatientsService,
     @Inject('IConfirmationAppoitmentService')
     private readonly confirmationAppoitmentService: IConfirmationAppoitmentService,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
   ) { }
 
   async create(createAppointmentDto: CreateAppointmentDto, email: string) {

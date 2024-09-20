@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,13 +8,19 @@ import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 import { PatientQueryDto } from './dto/patient-query.dto';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Injectable()
 @CatchErrors()
 export class PatientsService {
   constructor(
     @InjectRepository(Patient) private patientsRepository: Repository<Patient>,
-    @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>
+    @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
   ) { }
 
   async create(createPatientDto: CreatePatientDto) {

@@ -10,7 +10,6 @@ import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Patients')
 @Controller('patients')
-@CatchErrors()
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
 

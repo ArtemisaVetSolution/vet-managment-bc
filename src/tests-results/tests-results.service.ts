@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTestResultDto } from './dto/create-test-result.dto';
 import { UpdateTestResultDto } from './dto/update-test-result.dto';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
@@ -11,6 +11,8 @@ import { TestResultQueryDto } from './dto/test-result-query.dto';
 import { Response } from 'express';
 import { join } from 'path';
 import { createReadStream, existsSync } from 'fs';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Injectable()
 @CatchErrors()
@@ -18,7 +20,11 @@ export class TestsResultsService {
   constructor(
     @InjectRepository(TestResult) private testsResultsRepository: Repository<TestResult>,
     private patientsService: PatientsService,
-    private servicesService: ServicesService
+    private servicesService: ServicesService,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
   ) { }
 
   async create(createTestResultDto: CreateTestResultDto) {

@@ -15,7 +15,6 @@ import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 @ApiExtraModels(CreatedCollaboratorResponseDto)
 @PathName(Path.COLLABORATOR)
 @Controller('collaborators')
-@CatchErrors()
 export class CollaboratorsController {
   constructor(private readonly collaboratorsService: CollaboratorsService) {}
 

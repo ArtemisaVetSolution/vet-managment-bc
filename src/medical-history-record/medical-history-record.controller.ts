@@ -10,9 +10,8 @@ import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 
 @ApiTags('Medical History')
 @Controller('medical-history-record')
-@CatchErrors()
 export class MedicalHistoryRecordController {
-  constructor(private readonly medicalHistoryRecordService: MedicalHistoryRecordService
+  constructor(private readonly medicalHistoryRecordService: MedicalHistoryRecordService,
   ) { }
 
   @ApiDocCreateRecord(CreateMedicalHistoryRecordDto)

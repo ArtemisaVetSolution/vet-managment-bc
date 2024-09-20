@@ -19,7 +19,6 @@ import { Leave, Path } from 'src/common/enums';
 @ApiExtraModels(AppointmentResponseDto, AvailabilityResponse)
 @PathName(Path.APPOINTMENTS)
 @Controller('appointments')
-@CatchErrors()
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) { }
 
