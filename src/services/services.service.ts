@@ -6,13 +6,18 @@ import { Service } from './entities/service.entity';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { Repository } from 'typeorm';
 import { IHttpAdapter } from 'src/common/interfaces';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Injectable()
 @CatchErrors()
 export class ServicesService {
   constructor(
     @InjectRepository(Service) private readonly serviceRepository: Repository<Service>,
-    // @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter 
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
   ) {}
 
   

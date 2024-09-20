@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import PdfPrinter from 'pdfmake';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 const fonts = {
     Roboto: {
@@ -15,6 +17,12 @@ const fonts = {
 @Injectable()
 @CatchErrors()
 export class PdfGeneratorService {
+  constructor(
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
+  ) { }
     private printer = new PdfPrinter(fonts);
 
 

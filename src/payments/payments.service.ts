@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entities/payment.entity';
@@ -8,8 +8,11 @@ import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { AppointmentState } from 'src/common/enums';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Injectable()
+@CatchErrors()
 @CatchErrors()
 export class PaymentsService {
 
@@ -17,7 +20,11 @@ export class PaymentsService {
     @InjectRepository(Payment) private paymentRepository: Repository<Payment>,
     @InjectRepository(Appointment) private appointmentRepository: Repository<Appointment>,
     @InjectRepository(Tutor) private tutorRepository: Repository<Tutor>,
-    @InjectRepository(Patient) private patientRepository: Repository<Patient>
+    @InjectRepository(Patient) private patientRepository: Repository<Patient>,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
   ) {}
 
   async create(createPaymentDto: CreatePaymentDto) {

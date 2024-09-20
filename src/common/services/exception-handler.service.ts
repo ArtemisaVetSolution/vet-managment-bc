@@ -2,13 +2,14 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class ExceptionHandlerService {
-  handleDatabaseError(error: any): HttpException {
+  handleDatabaseError(error: any): HttpException {    
+    
     switch (error.code) {
       case '23505': // Clave duplicada
         return new HttpException('Duplicate key error', HttpStatus.CONFLICT);
       case '22P02': // Sintaxis inválida
         return new HttpException('Invalid input syntax', HttpStatus.BAD_REQUEST);
-      case '23503': // Violación de clave foránea
+      case '23503': // Violación de clave foránea        
         return new HttpException('Foreign key violation', HttpStatus.BAD_REQUEST);
       case '23502': // Violación de NOT NULL
         return new HttpException('Null value violation', HttpStatus.BAD_REQUEST);
@@ -31,7 +32,7 @@ export class ExceptionHandlerService {
       case '57P03': // Base de datos en modo de recuperación
         return new HttpException('Database in recovery mode, try again later', HttpStatus.SERVICE_UNAVAILABLE);
       default: // Error interno del servidor
-        return new HttpException( error.message || 'Internal server error', error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+        return new HttpException( error.message || 'Internal server error', error.code || HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

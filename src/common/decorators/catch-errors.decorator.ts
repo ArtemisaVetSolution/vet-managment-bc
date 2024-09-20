@@ -1,5 +1,6 @@
 import { LoggerService } from '../services/logger.service';
 import { ExceptionHandlerService } from '../services/exception-handler.service';
+import { HttpException } from '@nestjs/common';
 
 export function CatchErrors() {
   return function (constructor: Function) {
@@ -22,17 +23,20 @@ export function CatchErrors() {
           const loggerService: LoggerService = this.loggerService;
           const className = constructor.name;
 
+          if (!exceptionHandlerService) {
+            console.error('ExceptionHandlerService no está disponible en el contexto');
+          }
+          if (!loggerService) {
+            console.error('LoggerService no está disponible en el contexto');
+          }
+
           try {
 
             const result = await originalMethod.apply(this, args);
             return result;
-          } catch (error) {
-            loggerService.error(
-              `Error in ${className}.${name}: ${error.message}`,
-            );
-
-            const httpException = exceptionHandlerService.handleDatabaseError(error);
-            throw httpException;
+          } catch (error) {            
+            const httpError = exceptionHandlerService.handleDatabaseError(error);
+            throw httpError instanceof HttpException ? httpError : new HttpException(error.message || 'Internal server error desde aqui', 500);;
           }
         };
         metadata.forEach(({ key, value }) => {

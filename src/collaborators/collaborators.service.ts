@@ -10,6 +10,8 @@ import { ShiftsService } from 'src/shifts/shifts.service';
 import { userPath } from 'src/common/docs/users-service-path';
 import { CollaboratorQueryDto } from './dto/collaborator-query.dto';
 import { IHttpAdapter } from 'src/common/interfaces';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Injectable()
 @CatchErrors()
@@ -19,7 +21,11 @@ export class CollaboratorsService {
     private readonly serviceService: ServicesService,
     private readonly shiftService: ShiftsService,
     @InjectRepository(Collaborator) private collaboratorRepository: Repository<Collaborator>,
-    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter
+    @Inject('IHttpAdapter') private readonly httpAdapter: IHttpAdapter,
+    @Inject(LoggerService)
+    public readonly loggerService: LoggerService,
+    @Inject(ExceptionHandlerService)
+    public readonly exceptionHandlerService: ExceptionHandlerService,
   ) {} 
   async create(createCollaboratorDto: CreateCollaboratorDto) {
     const newUser = await this.httpAdapter.post<{ data: string }>( userPath + '/auth/register', {

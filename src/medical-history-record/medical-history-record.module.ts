@@ -10,10 +10,12 @@ import { PdfGeneratorService } from 'src/pdf-generator/pdf-generator.service';
 import { CollaboratorsModule } from 'src/collaborators/collaborators.module';
 import { CollaboratorsService } from 'src/collaborators/collaborators.service';
 import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
+import { LoggerService } from 'src/common/services';
+import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([MedicalHistoryRecord, Patient, Appointment, Collaborator]), PdfGeneratorModule],
   controllers: [MedicalHistoryRecordController],
-  providers: [MedicalHistoryRecordService, PdfGeneratorService],
+  providers: [MedicalHistoryRecordService, PdfGeneratorService, LoggerService, ExceptionHandlerService],
 })
 export class MedicalHistoryRecordModule {}
