@@ -18,7 +18,7 @@ export class ShiftSeeder {
         endTime: '16:00'
       },
       {
-        name: 'Afternoon',
+        name: 'afternoon',
         startTime: '14:00',
         endTime: '22:00'
       }

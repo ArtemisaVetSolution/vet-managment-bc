@@ -22,7 +22,7 @@ export class Patient extends AuditableEntity {
     })
     specie: Species;
 
-    @Column()
+    @Column({ nullable: true})
     breed: string;
 
     @Column({
@@ -38,11 +38,12 @@ export class Patient extends AuditableEntity {
     dob: Date;
 
     @Column({
-        type: 'float'
+        type: 'float',
+        nullable: true
     })
     weight: number;
 
-    @Column()
+    @Column({ nullable: true})
     alimentation: string;
 
     @Column({ nullable: true})
