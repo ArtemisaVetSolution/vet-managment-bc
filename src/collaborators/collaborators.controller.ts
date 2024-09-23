@@ -26,7 +26,7 @@ export class CollaboratorsController {
   }
 
   @ApiDocGetCollaborators(CreatedCollaboratorResponseDto)
-  @VerifyAuthService(Leave.CAN_READ)
+  // @VerifyAuthService(Leave.CAN_READ)
   @Get()
   findWithQueryParams(@Query() query: CollaboratorQueryDto) {
     return this.collaboratorsService.findWithQueryParams(query);

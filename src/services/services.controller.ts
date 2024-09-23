@@ -28,14 +28,14 @@ export class ServicesController {
   }
 
   @ApiDocGetServices(ServiceDto)
-  @VerifyAuthService(Leave.CAN_READ)
+  // @VerifyAuthService(Leave.CAN_READ)
   @Get()
   findAll() {
     return this.servicesService.findAll();
   }
 
   @ApiDocGetOneService(ServiceDto)
-  @VerifyAuthService(Leave.CAN_READ)
+  // @VerifyAuthService(Leave.CAN_READ)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.servicesService.findOne(+id);

@@ -13,7 +13,7 @@ import { ExceptionHandlerService } from 'src/common/services/exception-handler.s
 @Module({
   imports: [TypeOrmModule.forFeature([Tutor]), CommonModule],
   controllers: [TutorsController],
-  exports: [TutorsService],
+  exports: [TutorsService, TypeOrmModule],
   providers: [TutorsService, LoggerService, ExceptionHandlerService],
 })
 export class TutorsModule {}

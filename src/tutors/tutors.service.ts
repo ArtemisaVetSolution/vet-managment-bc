@@ -10,6 +10,7 @@ import { userPath } from 'src/common/docs/users-service-path';
 import { IHttpAdapter } from 'src/common/interfaces';
 import { LoggerService } from 'src/common/services';
 import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
+import { TutorQueryDto } from './dto/tutors-query.dto';
 
 @Injectable()
 @CatchErrors()
@@ -38,12 +39,23 @@ export class TutorsService {
     return await this.tutorsRepository.save(newTutor);
   }
 
-  async findAll() {
-    const tutors = await this.tutorsRepository.find();
+  async findAllOrFilter(tutorQuery: TutorQueryDto) {
+    const query = this.tutorsRepository.createQueryBuilder('tutor')
+    
+    if(tutorQuery.idNumber) {
+      query.where('tutor.identificationNumber = :identificationNumber', {identificationNumber: tutorQuery.idNumber});
+      return await query.getOne();
+    }
 
-    if (!tutors.length) throw new NotFoundException('No tutors were found');
+    return await query.getMany();
+  }
 
-    return tutors;
+  async findByUserId(id: string) {
+    const tutor = await this.tutorsRepository.findOne({ where: {userId: id}});
+
+    if(!tutor) throw new NotFoundException('Tutor by user ID not found');
+
+    return tutor;
   }
 
   async findOne(id: number) {

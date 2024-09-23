@@ -15,5 +15,6 @@ import { CommonModule } from 'src/common/common.module';
   providers: [CollaboratorsService, ServicesService, ShiftsService],
   imports: [TypeOrmModule.forFeature([Collaborator, Service, Shift])
   , CommonModule],
+  exports: [TypeOrmModule, CollaboratorsService, ServicesService, ShiftsService]
 })
 export class CollaboratorsModule {}

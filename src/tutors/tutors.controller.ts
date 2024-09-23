@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, StreamableFile, Res, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, StreamableFile, Res, Inject, Query } from '@nestjs/common';
 import { TutorsService } from './tutors.service';
 import { CreateTutorDto } from './dto/create-tutor.dto';
 import { UpdateTutorDto } from './dto/update-tutor.dto';
@@ -11,6 +11,7 @@ import { Response } from 'express';
 import { CatchErrors } from 'src/common/decorators/catch-errors.decorator';
 import { LoggerService } from 'src/common/services';
 import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
+import { TutorQueryDto } from './dto/tutors-query.dto';
 
 @ApiTags('Tutors')
 @ApiExtraModels(TutorResponseDto)
@@ -32,8 +33,13 @@ export class TutorsController {
 
   @ApiDocGetAllTutors(TutorResponseDto)
   @Get()
-  findAll() {
-    return this.tutorsService.findAll();
+  findAll(@Query() query: TutorQueryDto) {
+    return this.tutorsService.findAllOrFilter(query);
+  }
+
+  @Get('user/:id')
+  findByUserId(@Param('id') id: string) {
+    return this.tutorsService.findByUserId(id)
   }
 
   @ApiDocGetOneTutor(TutorResponseDto)

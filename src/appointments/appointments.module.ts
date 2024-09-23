@@ -11,6 +11,10 @@ import { Patient } from 'src/patients/entities/patient.entity';
 import { Tutor } from 'src/tutors/entities/tutor.entity';
 import { MailsenderserviceModule } from 'src/mail-sender/mail-sender-service.module';
 import { CommonModule } from 'src/common/common.module';
+import { TutorsModule } from 'src/tutors/tutors.module';
+import { TutorsService } from 'src/tutors/tutors.service';
+import { CollaboratorsModule } from 'src/collaborators/collaborators.module';
+import { CollaboratorsService } from 'src/collaborators/collaborators.service';
 
 
 
@@ -18,10 +22,12 @@ import { CommonModule } from 'src/common/common.module';
   imports: [
     TypeOrmModule.forFeature([Appointment, Patient, Service, Collaborator, Tutor]),
     MailsenderserviceModule,
-    CommonModule
+    CommonModule,
+    TutorsModule,
+    CollaboratorsModule
   ],
   controllers: [AppointmentsController],
-  providers: [AppointmentsService, PatientsService],
+  providers: [AppointmentsService, PatientsService, TutorsService, CollaboratorsService],
   exports: [AppointmentsService]
 })
 export class AppointmentsModule {}

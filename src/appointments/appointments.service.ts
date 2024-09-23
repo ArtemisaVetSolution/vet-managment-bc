@@ -15,6 +15,9 @@ import { Collaborator } from 'src/collaborators/entities/collaborator.entity';
 import { IConfirmationAppoitmentService } from 'src/mail-sender/interfaces/confirmation-appoitment-service.interface';
 import { LoggerService } from 'src/common/services';
 import { ExceptionHandlerService } from 'src/common/services/exception-handler.service';
+import { TutorsService } from 'src/tutors/tutors.service';
+import { CollaboratorsService } from 'src/collaborators/collaborators.service';
+import { Tutor } from 'src/tutors/entities/tutor.entity';
 
 
 @Injectable()
@@ -24,7 +27,9 @@ export class AppointmentsService {
     @InjectRepository(Appointment) private appointmentsRepository: Repository<Appointment>,
     @InjectRepository(Service) private servicesRepository: Repository<Service>,
     @InjectRepository(Collaborator) private collaboratorsRepository: Repository<Collaborator>,
+    @InjectRepository(Tutor) private tutorsRepository: Repository<Tutor>,
     private patientsService: PatientsService,
+    private collaboratorsService: CollaboratorsService,
     @Inject('IConfirmationAppoitmentService')
     private readonly confirmationAppoitmentService: IConfirmationAppoitmentService,
     @Inject(LoggerService)
@@ -35,14 +40,14 @@ export class AppointmentsService {
 
   async create(createAppointmentDto: CreateAppointmentDto, email: string) {
 
-    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: createAppointmentDto.collaboratorId }, relations: ['shift']} );
+    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: createAppointmentDto.collaboratorId }, relations: ['shift'] });
 
-    if(!collaborator)
-        throw new NotFoundException('Collaborator not found');
+    if (!collaborator)
+      throw new NotFoundException('Collaborator not found');
 
     const collaboratorShift = await this.getHoursInRange(collaborator.shift.startTime, collaborator.shift.endTime);
 
-    if(!collaboratorShift.includes(createAppointmentDto.time)) throw new BadRequestException('Time is not on collaborator shift');
+    if (!collaboratorShift.includes(createAppointmentDto.time)) throw new BadRequestException('Time is not on collaborator shift');
 
     //check if appointment is already taken
     const appointmentExists = await this.appointmentsRepository.findOne({ where: { date: createAppointmentDto.date, time: createAppointmentDto.time, collaborator, state: Not(AppointmentState.CANCELED) } })
@@ -64,22 +69,22 @@ export class AppointmentsService {
       patient
     })
     console.log(newAppointment);
-    
+
     const formattedDate = newAppointment.date.toISOString().split('T')[0];
 
     const sendEmail = await this.confirmationAppoitmentService.sendConfirmationEmail(email, patient.tutor.name, formattedDate, newAppointment.time, collaborator.name, patient.name, service.name)
     console.log(sendEmail);
-    
+
 
     return await this.appointmentsRepository.save(newAppointment);
   }
 
-  
+
   async findAllOrFilter(appointmentQuery: AppointmentsQueryDto) {
     const query = this.appointmentsRepository.createQueryBuilder('appointment')
-    .leftJoinAndSelect('appointment.patient', 'patient')
-    .leftJoinAndSelect('appointment.service', 'service')
-    .leftJoinAndSelect('appointment.collaborator', 'collaborator');
+      .leftJoinAndSelect('appointment.patient', 'patient')
+      .leftJoinAndSelect('appointment.service', 'service')
+      .leftJoinAndSelect('appointment.collaborator', 'collaborator');
 
     if (appointmentQuery.patientId) {
       const patient = await this.patientsService.findOne(appointmentQuery.patientId);
@@ -98,17 +103,48 @@ export class AppointmentsService {
       query.andWhere('appointment.date = :date', { date: appointmentQuery.date })
     }
 
+    if (appointmentQuery.tutorId) {
+      const patients = await this.patientsService.findWithQueryParams({ tutorId: appointmentQuery.tutorId });
+      const patientIds = patients.map(patient => patient.id);
+
+      if (patientIds.length > 0) {
+        // Usa IN para buscar todas las citas que tengan pacientes en la lista de ids
+        query.andWhere('appointment.patient IN (:...patientIds)', { patientIds });
+      }
+    }
+
+    if(appointmentQuery.tutorIdentification) {
+      const tutor = await this.tutorsRepository.findOne({ where: {identificationNumber: appointmentQuery.tutorIdentification}});
+      const patients = await this.patientsService.findWithQueryParams({ tutorId: tutor.id });
+      const patientIds = patients.map(patient => patient.id);
+
+      if (patientIds.length > 0) {
+        // Usa IN para buscar todas las citas que tengan pacientes en la lista de ids
+        query.andWhere('appointment.patient IN (:...patientIds)', { patientIds });
+      }
+    }
+
+    if (appointmentQuery.collaboratorId) {
+      const collaborator = await this.collaboratorsService.findOne(appointmentQuery.collaboratorId);
+      query.andWhere('collaborator.id = :collaboratorId', { collaboratorId: appointmentQuery.collaboratorId });
+    }
+
+    if (appointmentQuery.state) {
+
+      query.andWhere('appointment.state = :state', { state: appointmentQuery.state });
+    }
+
     return await query.getMany();
   }
 
-  
+
   async findOne(id: number) {
-    const appointment = await this.appointmentsRepository.findOne({ where: { id }, relations: ['service']});
+    const appointment = await this.appointmentsRepository.findOne({ where: { id }, relations: ['service'] });
     if (!appointment) throw new NotFoundException('Appointment not found');
     return appointment;
   }
 
-  
+
   async update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
     const result = await this.appointmentsRepository.update(id, updateAppointmentDto);
 
@@ -117,9 +153,9 @@ export class AppointmentsService {
     return await this.appointmentsRepository.findOne({ where: { id }, relations: ['service'] });
   }
 
-  
+
   async getAvailableAppointments(availableAppointmentsDto: AvailableAppointmentsDto) {
-    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: availableAppointmentsDto.collaboratorId }, relations: ['shift']} );
+    const collaborator = await this.collaboratorsRepository.findOne({ where: { id: availableAppointmentsDto.collaboratorId }, relations: ['shift'] });
 
     if (!collaborator) throw new NotFoundException('Collaborator not found');
 
@@ -127,14 +163,14 @@ export class AppointmentsService {
 
     const busyHours = appointments.map(appointment => appointment.time);
 
-    const hoursList = await this.getHoursInRange(collaborator.shift.startTime, collaborator.shift.endTime); 
+    const hoursList = await this.getHoursInRange(collaborator.shift.startTime, collaborator.shift.endTime);
 
     const availableHours = hoursList.filter((hour) => !busyHours.includes(hour));
 
     return { availableHours };
   }
 
-  
+
   async getHoursInRange(startTime: string, endTime: string) {
     const start = parse(startTime, 'HH:mm', new Date());
     const end = subHours(parse(endTime, 'HH:mm', new Date()), 1);
