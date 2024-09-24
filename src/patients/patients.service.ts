@@ -37,23 +37,39 @@ export class PatientsService {
 
   async findWithQueryParams(patientQuery: PatientQueryDto) {
 
-    const query = this.patientsRepository.createQueryBuilder('patient')
+    const { tutorId, specie, tutorIdentity, limit = 10, page = 1 } = patientQuery;
+    console.log(tutorId, specie, tutorIdentity, limit, page);
+    
 
-    if (patientQuery.tutorId) {
+    const query = this.patientsRepository.createQueryBuilder('patient')
+    .leftJoinAndSelect('patient.tutor', 'tutor');
+
+    if (tutorId) {
       const tutor = await this.tutorsRepository.findOne({ where: { id: patientQuery.tutorId } });
       if (!tutor) throw new NotFoundException('Tutor was not found');
       query.andWhere(`patient.tutor = :tutor`, { tutor: tutor.id });
     }
 
-    if (patientQuery.specie) {
+    if (specie) {
       query.andWhere('patient.specie = :specie', { specie: patientQuery.specie });
+      if(!specie) throw new NotFoundException('Specie was not found');
     }
 
-    const patients: Patient[] = await query.getMany();
+    if (tutorIdentity) {
+      query.andWhere('tutor.identificationNumber = :identity', { identity: patientQuery.tutorIdentity });
+      if(!tutorIdentity) throw new NotFoundException('Tutor identity was not found');
+    }
 
-    if (!patients.length) throw new NotFoundException('No patients were found');
+    query.skip((page - 1) * limit).take(limit);
 
-    return patients;
+    const [patients, totalPatients] = await query.getManyAndCount();
+
+     return {
+        data: patients,
+        totalPatients,
+        totalPages: Math.ceil(totalPatients / limit),
+        currentPage: page,
+    };
   }
 
   async findOne(id: number) {
