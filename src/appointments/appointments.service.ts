@@ -104,7 +104,7 @@ export class AppointmentsService {
     }
 
     if (appointmentQuery.tutorId) {
-      const patients = await this.patientsService.findWithQueryParams({ tutorId: appointmentQuery.tutorId });
+      const { data: patients } = await this.patientsService.findWithQueryParams({ tutorId: appointmentQuery.tutorId });
       const patientIds = patients.map(patient => patient.id);
 
       if (patientIds.length > 0) {
@@ -115,7 +115,7 @@ export class AppointmentsService {
 
     if(appointmentQuery.tutorIdentification) {
       const tutor = await this.tutorsRepository.findOne({ where: {identificationNumber: appointmentQuery.tutorIdentification}});
-      const patients = await this.patientsService.findWithQueryParams({ tutorId: tutor.id });
+      const  { data: patients } = await this.patientsService.findWithQueryParams({ tutorId: tutor.id });
       const patientIds = patients.map(patient => patient.id);
 
       if (patientIds.length > 0) {
