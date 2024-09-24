@@ -23,7 +23,8 @@ export class CreateMedicalHistoryRecordDto {
 
     @ApiProperty({description: 'current weight and alimentation', example: {
         weight: 3.8,
-        alimentation: 'Hills'
+        alimentation: 'Hills',
+        sterilized: true
     }})
     @IsNotEmpty()
     patientState: IPatientState;

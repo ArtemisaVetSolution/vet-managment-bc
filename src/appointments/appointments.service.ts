@@ -21,7 +21,7 @@ import { Tutor } from 'src/tutors/entities/tutor.entity';
 
 
 @Injectable()
-@CatchErrors()
+// @CatchErrors()
 export class AppointmentsService {
   constructor(
     @InjectRepository(Appointment) private appointmentsRepository: Repository<Appointment>,
@@ -139,7 +139,7 @@ export class AppointmentsService {
 
 
   async findOne(id: number) {
-    const appointment = await this.appointmentsRepository.findOne({ where: { id }, relations: ['service'] });
+    const appointment = await this.appointmentsRepository.findOne({ where: { id }, relations: ['service', 'patient', 'collaborator'] });
     if (!appointment) throw new NotFoundException('Appointment not found');
     return appointment;
   }
