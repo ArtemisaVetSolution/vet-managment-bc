@@ -16,7 +16,7 @@ import { ExceptionHandlerService } from 'src/common/services/exception-handler.s
 
 
 @Injectable()
-// @CatchErrors()
+@CatchErrors()
 export class MedicalHistoryRecordService {
   constructor(
     @InjectRepository(MedicalHistoryRecord) private medicalHistoryRepository: Repository<MedicalHistoryRecord>,
